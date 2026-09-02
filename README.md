@@ -1,7 +1,7 @@
-# Community Issue Reporting and Resolution Platform
+# Agapay
 
-A web platform where residents can report local issues and authorized staff can
-verify, assign, track, and resolve them.
+A community issue reporting and resolution platform where residents can report
+local problems and authorized staff can verify, assign, track, and resolve them.
 
 ## Planned stack
 
@@ -10,7 +10,7 @@ verify, assign, track, and resolve them.
 - Auth.js for authentication
 - Tailwind CSS and shadcn/ui
 - Zod for validation
-- Vitest and Playwright for testing
+- Vitest and Playwright for testing.
 
 No framework dependencies have been installed yet. The repository currently
 contains the agreed project structure only.
@@ -39,4 +39,3 @@ contains the agreed project structure only.
 ```
 
 See [docs/architecture.md](docs/architecture.md) for detailed ownership rules.
-
