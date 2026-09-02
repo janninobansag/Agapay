@@ -8,6 +8,10 @@ out/
 # Production builds
 build/
 dist/
+*.tsbuildinfo
+
+# Prisma Client is generated from prisma/schema.prisma.
+src/generated/prisma/
 
 # Test output
 coverage/
@@ -32,4 +36,3 @@ uploads/
 .DS_Store
 Thumbs.db
 *.log
-

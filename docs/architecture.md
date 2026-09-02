@@ -70,6 +70,19 @@ Infrastructure wrappers live here:
 Server code validates input, checks authorization, and then accesses the
 database. Client-provided roles or ownership identifiers are never trusted.
 
+Database reads return both data and an availability state. This lets the UI
+distinguish an empty result from missing configuration or an unreachable
+database without silently substituting fake production data.
+
+## Database
+
+PostgreSQL is the source of truth. Prisma owns the schema, migration history,
+generated client, and deterministic development seed. Runtime access goes
+through `src/lib/db/prisma.ts`, which reuses one client during Next.js hot reloads
+and uses the PostgreSQL driver adapter.
+
+See [data-model.md](data-model.md) for entity and lifecycle details.
+
 ## Testing strategy
 
 - `tests/unit`: pure functions, schemas, and permission rules
@@ -98,4 +111,3 @@ app routes -> features -> server/lib -> database or external services
 
 Infrastructure must not import route modules. Shared UI must not import feature
 modules. This keeps domain logic testable and prevents circular dependencies.
-
