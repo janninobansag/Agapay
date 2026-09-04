@@ -69,7 +69,7 @@ export async function createReport(
       });
       await tx.reportStatusEvent.create({ data: { reportId: report.id, actorId: user.id, toStatus: report.status, note: isDraft ? "Saved by the resident." : "Submitted for staff review." } });
       await tx.auditLog.create({ data: { action: isDraft ? "REPORT_DRAFT_CREATED" : "REPORT_SUBMITTED", entityType: "Report", entityId: report.id, actorId: user.id, metadata: { publicId } } });
-      if (!isDraft) await tx.notification.create({ data: { userId: user.id, reportId: report.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
+      if (!isDraft && user.inAppNotificationsEnabled) await tx.notification.create({ data: { userId: user.id, reportId: report.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
     if (media) await removeEvidence(media.objectKey);
@@ -108,7 +108,7 @@ export async function updateReport(
       await tx.report.update({ where: { id: existing.id }, data: { categoryId: parsed.data.categoryId, title: parsed.data.title, description: parsed.data.description, address: parsed.data.address, latitude: parsed.data.latitude, longitude: parsed.data.longitude, status: nextStatus, submittedAt: nextStatus === "SUBMITTED" ? existing.submittedAt ?? new Date() : null, media: media ? { create: media } : undefined } });
       if (existing.status !== nextStatus) await tx.reportStatusEvent.create({ data: { reportId: existing.id, actorId: user.id, fromStatus: existing.status, toStatus: nextStatus, note: "Draft submitted for staff review." } });
       await tx.auditLog.create({ data: { action: existing.status !== nextStatus ? "REPORT_SUBMITTED" : "REPORT_UPDATED", entityType: "Report", entityId: existing.id, actorId: user.id, metadata: { publicId, evidenceAdded: Boolean(media) } } });
-      if (existing.status !== nextStatus) await tx.notification.create({ data: { userId: user.id, reportId: existing.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
+      if (existing.status !== nextStatus && user.inAppNotificationsEnabled) await tx.notification.create({ data: { userId: user.id, reportId: existing.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
     if (media) await removeEvidence(media.objectKey);
@@ -139,7 +139,7 @@ export async function transitionReport(formData: FormData) {
   const user = await requireRole(["STAFF", "ADMIN"]);
   const parsed = staffTransitionSchema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return;
-  const report = await getPrisma().report.findUnique({ where: { publicId: parsed.data.reportId } });
+  const report = await getPrisma().report.findUnique({ where: { publicId: parsed.data.reportId }, include: { reporter: { select: { inAppNotificationsEnabled: true } } } });
   if (!report) return;
   const nextStatus = getStaffTransition(report.status, parsed.data.transition);
   if (!nextStatus) return;
@@ -162,7 +162,7 @@ export async function transitionReport(formData: FormData) {
     if (updated.count !== 1) throw new Error("The report status changed. Refresh and try again.");
     if (!isAssignment) await tx.reportStatusEvent.create({ data: { reportId: report.id, actorId: user.id, fromStatus: report.status, toStatus: nextStatus, note: parsed.data.note || undefined } });
     await tx.auditLog.create({ data: { action: `REPORT_${parsed.data.transition.toUpperCase()}`, entityType: "Report", entityId: report.id, actorId: user.id, metadata: { publicId: report.publicId, fromStatus: report.status, toStatus: nextStatus, assignedTeamId: parsed.data.assignedTeamId || null, assignedStaffId: parsed.data.assignedStaffId || null } as Prisma.InputJsonObject } });
-    await tx.notification.create({ data: { userId: report.reporterId, reportId: report.id, type: nextStatus === "RESOLVED" ? "REPORT_RESOLVED" : nextStatus === "REJECTED" ? "REPORT_REJECTED" : isAssignment ? "REPORT_ASSIGNED" : nextStatus === "VERIFIED" ? "REPORT_VERIFIED" : "REPORT_UPDATED", title: isAssignment ? "Report assigned" : `Report ${nextStatus.toLowerCase().replace("_", " ")}`, body: parsed.data.note || `The status of ${report.publicId} has been updated.` } });
+    if (report.reporter.inAppNotificationsEnabled) await tx.notification.create({ data: { userId: report.reporterId, reportId: report.id, type: nextStatus === "RESOLVED" ? "REPORT_RESOLVED" : nextStatus === "REJECTED" ? "REPORT_REJECTED" : isAssignment ? "REPORT_ASSIGNED" : nextStatus === "VERIFIED" ? "REPORT_VERIFIED" : "REPORT_UPDATED", title: isAssignment ? "Report assigned" : `Report ${nextStatus.toLowerCase().replace("_", " ")}`, body: parsed.data.note || `The status of ${report.publicId} has been updated.` } });
   });
   revalidatePath("/staff");
   revalidatePath(`/staff/reports/${report.publicId}`);

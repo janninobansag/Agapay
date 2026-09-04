@@ -42,7 +42,7 @@ Then open `http://localhost:3000`.
 | `/reports/[reportId]/edit` | Allowed resident report edits | Implemented |
 | `/map` | Verified community report map | Implemented |
 | `/notifications` | Resident update inbox | Implemented |
-| `/settings` | Profile preferences | Placeholder |
+| `/settings` | Profile and notification preferences | Implemented |
 | `/staff` | Staff verification and response queue | Implemented |
 | `/staff/reports/[reportId]` | Staff workflow controls | Implemented |
 | `/admin` | Administrative overview | Implemented |

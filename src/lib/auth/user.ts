@@ -10,6 +10,7 @@ export type CurrentUser = {
   email: string;
   name: string;
   role: UserRole;
+  inAppNotificationsEnabled: boolean;
 };
 
 export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
@@ -26,6 +27,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
       email: true,
       name: true,
       role: true,
+      inAppNotificationsEnabled: true,
     },
   });
 });

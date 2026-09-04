@@ -48,6 +48,7 @@ The current application contains:
 - Interactive OpenStreetMap community and report-location maps
 - Policy-compliant, cached Philippines location search
 - Resident notification inbox, unread count, and email templates
+- Persistent resident profile and notification-preference settings
 - Credentials sign-in, registration, sign-out, and role-specific workspaces
 - Placeholder map, notifications, and settings pages
 

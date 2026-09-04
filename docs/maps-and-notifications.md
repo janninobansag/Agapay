@@ -46,6 +46,8 @@ Report submission and each staff workflow update write a `Notification` within
 the same transaction as the report event and audit log. The resident layout
 shows a live unread count. The inbox supports ownership-checked single-item and
 mark-all-read actions; one resident cannot mark another resident's records.
+Residents can disable future inbox delivery from `/settings`; existing records
+remain visible so changing the preference never erases report history.
 
 The first release loads the newest 100 notifications. Realtime browser pushes
 are not required for the MVP: Next.js refreshes the count and inbox after each
