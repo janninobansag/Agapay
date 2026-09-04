@@ -14,7 +14,7 @@ and gives support staff an easy reference number.
 
 | Entity | Responsibility |
 | --- | --- |
-| `User` | Resident, staff, and administrator identities |
+| `User` | Resident, staff, administrator identities, and delivery preferences |
 | `IssueCategory` | Administrator-controlled report categories |
 | `ServiceArea` | Geographic or administrative area responsible for reports |
 | `ResponseTeam` | Team that can be assigned resolution work |

@@ -53,6 +53,17 @@ call `requireUser` or `requireRole` next to the database operation.
 Authenticated users visiting an area outside their role are returned to their
 own workspace through `/post-login`.
 
+## Resident account settings
+
+The `/settings` route loads the active resident from PostgreSQL. Residents can
+change their display name and enable or disable future in-app report updates.
+Both actions validate input, derive the user ID from the authenticated session,
+and append an immutable audit record in the same database transaction.
+
+The email address is intentionally read-only. Changing it safely requires email
+ownership verification, while password changes require a time-limited reset
+flow; neither is simulated with an insecure direct database update.
+
 ## Demonstration identities
 
 The deterministic seed enables these local portfolio accounts:

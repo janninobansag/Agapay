@@ -51,14 +51,15 @@ enum NotificationType {
 }
 
 model User {
-  id           String     @id @default(cuid())
-  email        String     @unique @db.VarChar(320)
-  name         String     @db.VarChar(100)
-  passwordHash String?
-  role         UserRole   @default(RESIDENT)
-  status       UserStatus @default(ACTIVE)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
+  id                        String     @id @default(cuid())
+  email                     String     @unique @db.VarChar(320)
+  name                      String     @db.VarChar(100)
+  passwordHash              String?
+  role                      UserRole   @default(RESIDENT)
+  status                    UserStatus @default(ACTIVE)
+  inAppNotificationsEnabled Boolean    @default(true)
+  createdAt                 DateTime   @default(now())
+  updatedAt                 DateTime   @updatedAt
 
   reports         Report[]            @relation("ReportReporter")
   assignedReports Report[]            @relation("AssignedStaff")
