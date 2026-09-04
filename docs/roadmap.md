@@ -19,10 +19,10 @@
 
 ## Milestone 3: Identity and permissions
 
-- [ ] Configure Auth.js
-- [ ] Add resident, staff, and administrator roles
-- [ ] Protect routes and server actions
-- [ ] Test resource-level authorization policies
+- [x] Configure Auth.js
+- [x] Add resident, staff, and administrator roles
+- [x] Protect routes and establish server-action authorization guards
+- [x] Test resource-level authorization policies
 
 ## Milestone 4: Reporting workflow
 

@@ -13,9 +13,10 @@ const prisma = new PrismaClient({
 });
 
 async function verify() {
-  const [users, categories, teams, reports, events, notifications, reportIds] =
+  const [users, loginEnabledUsers, categories, teams, reports, events, notifications, reportIds] =
     await prisma.$transaction([
       prisma.user.count(),
+      prisma.user.count({ where: { passwordHash: { not: null } } }),
       prisma.issueCategory.count(),
       prisma.responseTeam.count(),
       prisma.report.count(),
@@ -29,6 +30,7 @@ async function verify() {
 
   console.info({
     users,
+    loginEnabledUsers,
     categories,
     teams,
     reports,
@@ -46,4 +48,3 @@ verify()
   .finally(async () => {
     await prisma.$disconnect();
   });
-

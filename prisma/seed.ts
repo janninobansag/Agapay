@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
+import { hash } from "bcryptjs";
 import {
   NotificationType,
   PrismaClient,
@@ -28,6 +29,11 @@ const categories = [
 ] as const;
 
 async function seed() {
+  const demoPasswordHash = await hash(
+    process.env.SEED_DEMO_PASSWORD || "AgapayDemo123!",
+    12,
+  );
+
   const categoryRecords = await Promise.all(
     categories.map(([slug, name, description]) =>
       prisma.issueCategory.upsert({
@@ -48,31 +54,34 @@ async function seed() {
 
   const resident = await prisma.user.upsert({
     where: { email: "resident@agapay.local" },
-    update: { name: "Juan Dela Cruz", role: UserRole.RESIDENT },
+    update: { name: "Juan Dela Cruz", role: UserRole.RESIDENT, passwordHash: demoPasswordHash },
     create: {
       email: "resident@agapay.local",
       name: "Juan Dela Cruz",
       role: UserRole.RESIDENT,
+      passwordHash: demoPasswordHash,
     },
   });
 
   const staff = await prisma.user.upsert({
     where: { email: "staff@agapay.local" },
-    update: { name: "Maria Santos", role: UserRole.STAFF },
+    update: { name: "Maria Santos", role: UserRole.STAFF, passwordHash: demoPasswordHash },
     create: {
       email: "staff@agapay.local",
       name: "Maria Santos",
       role: UserRole.STAFF,
+      passwordHash: demoPasswordHash,
     },
   });
 
   await prisma.user.upsert({
     where: { email: "admin@agapay.local" },
-    update: { name: "Agapay Administrator", role: UserRole.ADMIN },
+    update: { name: "Agapay Administrator", role: UserRole.ADMIN, passwordHash: demoPasswordHash },
     create: {
       email: "admin@agapay.local",
       name: "Agapay Administrator",
       role: UserRole.ADMIN,
+      passwordHash: demoPasswordHash,
     },
   });
 

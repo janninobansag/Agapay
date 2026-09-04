@@ -2,11 +2,13 @@ import { ArrowUpRight, CheckCircle2, Clock3, FileText, Plus, UsersRound } from "
 import Link from "next/link";
 import { DatabaseState } from "@/components/feedback/database-state";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { requireUser } from "@/lib/auth/user";
 import { getResidentReports } from "@/server/queries/reports";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
+  const user = await requireUser();
   const { data: reports, availability } = await getResidentReports();
   const activeCount = reports.filter((report) => !["Draft", "Resolved", "Rejected"].includes(report.status)).length;
   const resolvedCount = reports.filter((report) => report.status === "Resolved").length;
@@ -23,7 +25,7 @@ export default async function DashboardPage() {
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Resident dashboard</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-brand-dark sm:text-4xl">Good morning, Juan.</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-brand-dark sm:text-4xl">Good morning, {user.name.split(" ")[0]}.</h1>
           <p className="mt-2 text-muted">Here is what is happening in your community.</p>
         </div>
         <Link className="inline-flex items-center justify-center gap-2 self-start rounded-full bg-brand px-5 py-3 text-sm font-bold text-white hover:bg-brand-dark" href="/reports/new">

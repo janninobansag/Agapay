@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { SignOutButton } from "@/features/auth/components/sign-out-button";
+import type { CurrentUser } from "@/lib/auth/user";
 
 const navigation = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -18,7 +20,7 @@ const navigation = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function PlatformShell({ children }: Readonly<{ children: React.ReactNode }>) {
+export function PlatformShell({ children, user }: Readonly<{ children: React.ReactNode; user: CurrentUser }>) {
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-[260px_1fr]">
       <aside className="hidden border-r border-border bg-surface lg:flex lg:flex-col">
@@ -41,10 +43,11 @@ export function PlatformShell({ children }: Readonly<{ children: React.ReactNode
           <div className="flex items-center gap-3 rounded-xl bg-surface-muted p-3">
             <CircleUserRound aria-hidden="true" className="text-brand" size={32} />
             <div className="min-w-0">
-              <p className="truncate text-sm font-semibold">Demo resident</p>
-              <p className="truncate text-xs text-muted">resident@agapay.local</p>
+              <p className="truncate text-sm font-semibold">{user.name}</p>
+              <p className="truncate text-xs text-muted">{user.email}</p>
             </div>
           </div>
+          <div className="mt-2"><SignOutButton /></div>
         </div>
       </aside>
 
@@ -75,4 +78,3 @@ export function PlatformShell({ children }: Readonly<{ children: React.ReactNode
     </div>
   );
 }
-

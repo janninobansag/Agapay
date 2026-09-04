@@ -83,6 +83,15 @@ and uses the PostgreSQL driver adapter.
 
 See [data-model.md](data-model.md) for entity and lifecycle details.
 
+## Identity boundary
+
+Auth.js owns session creation and cookies. `src/lib/auth/user.ts` is the data
+access boundary for current-user checks, while `src/lib/permissions` contains
+pure authorization policies that can be unit tested without a web request.
+
+See [authentication.md](authentication.md) for flows, route roles, and current
+security limitations.
+
 ## Testing strategy
 
 - `tests/unit`: pure functions, schemas, and permission rules

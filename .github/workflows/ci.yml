@@ -14,6 +14,7 @@ jobs:
     timeout-minutes: 15
     env:
       DATABASE_URL: postgresql://agapay:agapay@localhost:5432/agapay?schema=public
+      AUTH_SECRET: ci-only-placeholder-not-used-outside-build-checks
 
     steps:
       - name: Check out repository

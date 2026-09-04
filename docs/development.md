@@ -42,7 +42,7 @@ The current application contains:
 - Resident navigation and dashboard
 - Database-backed report list and detail pages
 - A visual report-submission form
-- Authentication screen prototypes
+- Credentials sign-in, registration, sign-out, and role-specific workspaces
 - Placeholder map, notifications, and settings pages
 
 Report submission does not persist data yet; that mutation belongs to the
@@ -111,7 +111,28 @@ verified on September 4, 2026. Expected verification counts are:
 
 Run `npm.cmd run db:verify` at any time to perform the same read-only check.
 
+## Demo sign-in
+
+After running the current seed, use `AgapayDemo123!` with one of these emails:
+
+- Resident: `resident@agapay.local`
+- Staff: `staff@agapay.local`
+- Administrator: `admin@agapay.local`
+
+Override the shared development password by setting `SEED_DEMO_PASSWORD` before
+rerunning `npm.cmd run db:seed`. Do not use the demonstration password for real
+users or a public production administration account.
+
 ## Environment variables
 
 `.env.example` documents every planned configuration value. Local values belong
 in `.env`, which is ignored by Git. Never commit real credentials.
+
+Generate a private Auth.js secret before deployment:
+
+```powershell
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
+```
+
+Copy the printed value into `AUTH_SECRET` in `.env`. Do not reuse the example
+value or expose the generated value in screenshots and commits.
