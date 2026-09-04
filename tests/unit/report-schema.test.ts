@@ -46,4 +46,12 @@ describe("createReportSchema", () => {
   it("allows an incomplete description and location in a draft", () => {
     expect(draftReportSchema.safeParse({ ...validReport, description: "", address: "", saveAsDraft: true }).success).toBe(true);
   });
+
+  it("requires a selected map location for submission", () => {
+    expect(createReportSchema.safeParse({ ...validReport, latitude: null, longitude: null }).success).toBe(false);
+  });
+
+  it("rejects submitted coordinates outside the Philippines", () => {
+    expect(createReportSchema.safeParse({ ...validReport, latitude: 40.7128, longitude: -74.006 }).success).toBe(false);
+  });
 });

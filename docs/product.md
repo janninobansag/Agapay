@@ -31,7 +31,9 @@ authorized response teams a structured workflow for resolving them.
 
 ```text
 Draft -> Submitted -> Verified -> In Progress -> Resolved
-                   `-> Rejected
+  |           |          |
+  `-----------+----------+-> Cancelled
+              `------------> Rejected
 ```
 
 Reopening and duplicate-report behavior will be specified before the staff
@@ -65,4 +67,3 @@ Deferred until the core workflow is reliable:
 - Every meaningful staff action has an attributable audit record.
 - Residents can understand the current status without knowing internal office
   terminology.
-

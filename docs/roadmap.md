@@ -34,10 +34,10 @@
 
 ## Milestone 5: Maps and notifications
 
-- [ ] Add MapLibre and OpenStreetMap
-- [ ] Geocode and validate report locations
-- [ ] Add in-app notification delivery
-- [ ] Add email notification templates
+- [x] Add MapLibre and OpenStreetMap
+- [x] Geocode and validate report locations
+- [x] Add in-app notification delivery
+- [x] Add email notification templates
 
 ## Milestone 6: Portfolio release
 

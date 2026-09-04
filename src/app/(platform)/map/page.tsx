@@ -1,10 +1,10 @@
-import { MapPin } from "lucide-react";
+import { CommunityMap } from "@/features/map/components/community-map";
+import { getCommunityMapReports } from "@/server/queries/map";
 
 export const metadata = { title: "Community map" };
+export const dynamic = "force-dynamic";
 
-export default function MapPage() {
-  return (
-    <div><p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Community map</p><h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-brand-dark">Issues around your area</h1><p className="mt-2 text-muted">Map integration will be added after reports are stored in the database.</p><div className="mt-8 grid min-h-[520px] place-items-center rounded-3xl border border-border bg-[radial-gradient(circle_at_center,var(--brand-soft),var(--surface-muted))]"><div className="text-center"><span className="mx-auto grid size-14 place-items-center rounded-2xl bg-surface text-brand shadow-sm"><MapPin size={27} /></span><p className="mt-4 font-bold text-brand-dark">Interactive community map</p><p className="mt-1 text-sm text-muted">Planned with MapLibre and OpenStreetMap</p></div></div></div>
-  );
+export default async function MapPage() {
+  const reports = await getCommunityMapReports();
+  return <div><p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Community map</p><h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-brand-dark">Verified issues around your area</h1><p className="mt-2 text-muted">Explore verified, active, and resolved community reports. Exact resident identity is never shown.</p><div className="mt-8 overflow-hidden rounded-3xl border border-border bg-surface"><CommunityMap reports={reports} /></div><p className="mt-3 text-xs text-muted">Showing {reports.length} geolocated {reports.length === 1 ? "report" : "reports"}. Select a marker for details.</p>{reports.length > 0 && <ul aria-label="Reports shown on the map" className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">{reports.map((report) => <li className="rounded-2xl border border-border bg-surface p-4" key={report.id}><p className="font-mono text-xs font-bold text-brand">{report.id} · {report.category}</p><h2 className="mt-1 font-bold text-brand-dark">{report.title}</h2><p className="mt-2 text-xs text-muted">{report.status}</p></li>)}</ul>}</div>;
 }
-

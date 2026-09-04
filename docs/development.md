@@ -45,6 +45,9 @@ The current application contains:
 - Staff verification, assignment, work-start, rejection, and resolution tools
 - Private, optimized Supabase evidence uploads with signed display URLs
 - Transactional status history, notifications, and append-only audit logs
+- Interactive OpenStreetMap community and report-location maps
+- Policy-compliant, cached Philippines location search
+- Resident notification inbox, unread count, and email templates
 - Credentials sign-in, registration, sign-out, and role-specific workspaces
 - Placeholder map, notifications, and settings pages
 
@@ -143,3 +146,8 @@ value or expose the generated value in screenshots and commits.
 For evidence uploads, also set the three `SUPABASE_*` Storage values documented
 in `.env.example`, then run `npm.cmd run storage:setup`. The database connection
 string alone cannot authorize private object-storage administration.
+
+Map development works without an API key. The default tile and Nominatim URLs
+are documented in `.env.example` and can be replaced per environment. Read
+`maps-and-notifications.md` before production use; the public OSM services have
+strict attribution, identification, caching, and traffic rules.

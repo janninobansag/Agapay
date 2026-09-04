@@ -27,6 +27,7 @@ test-results/
 *.db
 *.db-journal
 uploads/
+public/maplibre/
 
 # Tooling and operating-system files
 .idea/
