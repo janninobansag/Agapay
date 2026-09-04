@@ -1,6 +1,7 @@
 import { z } from "zod";
+import { isWithinPhilippines } from "@/lib/map/geography";
 
-export const createReportSchema = z.object({
+const reportFields = z.object({
   categoryId: z.string().trim().min(1, "Choose an issue category."),
   title: z.string().trim().min(8, "Use at least 8 characters.").max(100),
   description: z.string().trim().min(20, "Add enough detail for the response team.").max(1000),
@@ -10,7 +11,17 @@ export const createReportSchema = z.object({
   saveAsDraft: z.boolean().default(false),
 });
 
-export const draftReportSchema = createReportSchema.extend({
+export const createReportSchema = reportFields.superRefine((report, context) => {
+  if (report.latitude == null || report.longitude == null) {
+    context.addIssue({ code: "custom", path: ["address"], message: "Search for and select a location on the map." });
+    return;
+  }
+  if (!isWithinPhilippines(report.latitude, report.longitude)) {
+    context.addIssue({ code: "custom", path: ["address"], message: "Choose a location within the Philippines." });
+  }
+});
+
+export const draftReportSchema = reportFields.extend({
   title: z.string().trim().min(3, "Use at least 3 characters.").max(100),
   description: z.string().trim().max(1000),
   address: z.string().trim().max(240),

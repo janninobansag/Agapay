@@ -20,7 +20,7 @@ const navigation = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-export function PlatformShell({ children, user }: Readonly<{ children: React.ReactNode; user: CurrentUser }>) {
+export function PlatformShell({ children, unreadCount, user }: Readonly<{ children: React.ReactNode; unreadCount: number; user: CurrentUser }>) {
   return (
     <div className="min-h-screen bg-background lg:grid lg:grid-cols-[260px_1fr]">
       <aside className="hidden border-r border-border bg-surface lg:flex lg:flex-col">
@@ -56,9 +56,10 @@ export function PlatformShell({ children, user }: Readonly<{ children: React.Rea
           <Link aria-label="Agapay home" className="lg:hidden" href="/"><BrandMark /></Link>
           <p className="hidden text-sm font-medium text-muted lg:block">A safer neighborhood starts with one report.</p>
           <div className="flex items-center gap-2">
-            <button aria-label="View notifications" className="grid size-10 place-items-center rounded-full border border-border bg-surface text-muted hover:text-brand">
+            <Link aria-label={`${unreadCount} unread notifications`} className="relative grid size-10 place-items-center rounded-full border border-border bg-surface text-muted hover:text-brand" href="/notifications">
               <Bell aria-hidden="true" size={19} />
-            </button>
+              {unreadCount > 0 && <span className="absolute -right-1 -top-1 grid min-w-5 place-items-center rounded-full bg-accent px-1 text-[10px] font-bold text-brand-dark">{Math.min(unreadCount, 99)}</span>}
+            </Link>
             <Link className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark" href="/reports/new">
               <Plus aria-hidden="true" size={17} />
               <span className="hidden sm:inline">New report</span>

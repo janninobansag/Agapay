@@ -11,6 +11,7 @@ local problems and authorized staff can verify, assign, track, and resolve them.
 - Tailwind CSS and shadcn/ui
 - Zod for validation
 - Supabase Storage and Sharp for private, optimized evidence images
+- MapLibre GL JS with OpenStreetMap tiles and Nominatim search
 - Vitest and Playwright for testing.
 
 The frontend foundation, PostgreSQL data layer, role-based authentication, and
@@ -39,8 +40,8 @@ Then open `http://localhost:3000`.
 | `/reports/new` | Draft and report submission | Implemented |
 | `/reports/[reportId]` | Evidence, actions, and progress | Implemented |
 | `/reports/[reportId]/edit` | Allowed resident report edits | Implemented |
-| `/map` | Geographic report discovery | Placeholder |
-| `/notifications` | Resident updates | Placeholder |
+| `/map` | Verified community report map | Implemented |
+| `/notifications` | Resident update inbox | Implemented |
 | `/settings` | Profile preferences | Placeholder |
 | `/staff` | Staff verification and response queue | Implemented |
 | `/staff/reports/[reportId]` | Staff workflow controls | Implemented |
@@ -78,6 +79,7 @@ Then open `http://localhost:3000`.
 - [Database model](docs/data-model.md)
 - [Authentication and authorization](docs/authentication.md)
 - [Reporting workflow and evidence setup](docs/reporting-workflow.md)
+- [Maps, geocoding, notifications, and email](docs/maps-and-notifications.md)
 - [Data-layer decision record](docs/decisions/001-postgresql-and-prisma.md)
 - [Local development guide](docs/development.md)
 - [Delivery roadmap](docs/roadmap.md)

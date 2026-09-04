@@ -26,6 +26,7 @@ src/app/
 |-- (staff)/
 |   `-- staff/reports/[reportId]/
 `-- api/
+    `-- geocode/
 ```
 
 Route files should remain thin. Pages compose feature components and call the
@@ -101,6 +102,14 @@ Report mutations live in `src/server/actions/reports.ts`. Lifecycle policies are
 pure functions in `src/lib/permissions/reports.ts`, while optimized evidence is
 handled by the server-only `src/lib/storage/evidence.ts` adapter. See
 [reporting-workflow.md](reporting-workflow.md) for transition and failure rules.
+
+## Maps and notification boundary
+
+Client-only MapLibre components live in `src/features/map`; server queries decide
+which report fields may reach the community layer. The authenticated geocoding
+proxy owns provider policy, throttling, and caching. Notification reads and
+mutations stay in `src/server`, while provider-neutral email rendering lives in
+`src/features/notifications`. See [maps-and-notifications.md](maps-and-notifications.md).
 
 ## Testing strategy
 

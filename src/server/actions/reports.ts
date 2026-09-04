@@ -69,6 +69,7 @@ export async function createReport(
       });
       await tx.reportStatusEvent.create({ data: { reportId: report.id, actorId: user.id, toStatus: report.status, note: isDraft ? "Saved by the resident." : "Submitted for staff review." } });
       await tx.auditLog.create({ data: { action: isDraft ? "REPORT_DRAFT_CREATED" : "REPORT_SUBMITTED", entityType: "Report", entityId: report.id, actorId: user.id, metadata: { publicId } } });
+      if (!isDraft) await tx.notification.create({ data: { userId: user.id, reportId: report.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
     if (media) await removeEvidence(media.objectKey);
@@ -107,6 +108,7 @@ export async function updateReport(
       await tx.report.update({ where: { id: existing.id }, data: { categoryId: parsed.data.categoryId, title: parsed.data.title, description: parsed.data.description, address: parsed.data.address, latitude: parsed.data.latitude, longitude: parsed.data.longitude, status: nextStatus, submittedAt: nextStatus === "SUBMITTED" ? existing.submittedAt ?? new Date() : null, media: media ? { create: media } : undefined } });
       if (existing.status !== nextStatus) await tx.reportStatusEvent.create({ data: { reportId: existing.id, actorId: user.id, fromStatus: existing.status, toStatus: nextStatus, note: "Draft submitted for staff review." } });
       await tx.auditLog.create({ data: { action: existing.status !== nextStatus ? "REPORT_SUBMITTED" : "REPORT_UPDATED", entityType: "Report", entityId: existing.id, actorId: user.id, metadata: { publicId, evidenceAdded: Boolean(media) } } });
+      if (existing.status !== nextStatus) await tx.notification.create({ data: { userId: user.id, reportId: existing.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
     if (media) await removeEvidence(media.objectKey);
