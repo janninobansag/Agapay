@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
+import { SignInForm } from "@/features/auth/components/sign-in-form";
 
 export const metadata = { title: "Sign in" };
 
@@ -10,15 +11,14 @@ export default function SignInPage() {
         <Link aria-label="Agapay home" href="/"><BrandMark /></Link>
         <h1 className="mt-10 text-3xl font-bold tracking-tight text-brand-dark">Welcome back</h1>
         <p className="mt-2 text-sm text-muted">Sign in to track your reports and community updates.</p>
-        <form className="mt-8 space-y-5">
-          <div><label className="text-sm font-bold" htmlFor="email">Email address</label><input autoComplete="email" className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm" id="email" name="email" placeholder="you@example.com" required type="email" /></div>
-          <div><div className="flex justify-between"><label className="text-sm font-bold" htmlFor="password">Password</label><button className="text-xs font-bold text-brand" type="button">Forgot password?</button></div><input autoComplete="current-password" className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm" id="password" name="password" required type="password" /></div>
-          <button className="w-full rounded-full bg-brand px-5 py-3 text-sm font-bold text-white hover:bg-brand-dark" type="submit">Sign in</button>
-        </form>
+        <SignInForm />
+        <div className="mt-6 rounded-2xl bg-brand-soft/60 p-4 text-xs leading-5 text-brand-dark">
+          <p className="font-bold">Resident demo</p>
+          <p>Email: resident@agapay.local</p>
+          <p>Password: AgapayDemo123!</p>
+        </div>
         <p className="mt-6 text-center text-sm text-muted">New to Agapay? <Link className="font-bold text-brand" href="/sign-up">Create an account</Link></p>
-        <p className="mt-5 text-center text-xs text-muted">Authentication will be enabled in the next backend milestone.</p>
       </div>
     </main>
   );
 }
-

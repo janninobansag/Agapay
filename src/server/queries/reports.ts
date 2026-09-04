@@ -1,8 +1,7 @@
 import type { ReportStatus as DatabaseReportStatus } from "@prisma/client";
 import { getPrisma, isDatabaseConfigured } from "@/lib/db/prisma";
+import { requireRole } from "@/lib/auth/user";
 import type { ReportStatus, ReportSummary } from "@/features/reports/types";
-
-const demoResidentEmail = "resident@agapay.local";
 
 export type DataAvailability = "ready" | "unconfigured" | "unavailable";
 
@@ -62,10 +61,11 @@ function statusEventTitle(status: DatabaseReportStatus) {
 
 export async function getResidentReports(): Promise<QueryResult<ReportSummary[]>> {
   if (!isDatabaseConfigured()) return { data: [], availability: "unconfigured" };
+  const user = await requireRole(["RESIDENT"]);
 
   try {
     const reports = await getPrisma().report.findMany({
-      where: { reporter: { email: demoResidentEmail } },
+      where: { reporterId: user.id },
       include: { category: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
     });
@@ -89,10 +89,11 @@ export async function getResidentReports(): Promise<QueryResult<ReportSummary[]>
 
 export async function getReportByPublicId(publicId: string): Promise<QueryResult<ReportDetails | null>> {
   if (!isDatabaseConfigured()) return { data: null, availability: "unconfigured" };
+  const user = await requireRole(["RESIDENT"]);
 
   try {
-    const report = await getPrisma().report.findUnique({
-      where: { publicId },
+    const report = await getPrisma().report.findFirst({
+      where: { publicId, reporterId: user.id },
       include: {
         category: { select: { name: true } },
         statusHistory: { orderBy: { createdAt: "asc" } },
@@ -126,4 +127,3 @@ export async function getReportByPublicId(publicId: string): Promise<QueryResult
     return { data: null, availability: "unavailable" };
   }
 }
-

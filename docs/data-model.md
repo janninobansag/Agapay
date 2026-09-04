@@ -82,6 +82,6 @@ records. It creates:
 - Three reports across verified, in-progress, and resolved states
 - Status histories and a resident notification
 
-Demo accounts intentionally have no passwords. Authentication is not enabled in
-this milestone.
-
+Demo accounts receive bcrypt password hashes from the deterministic seed. The
+plain demonstration password is documented in `authentication.md` and can be
+overridden through `SEED_DEMO_PASSWORD`.
