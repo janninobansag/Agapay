@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function DashboardPage() {
   const user = await requireUser();
   const { data: reports, availability } = await getResidentReports();
-  const activeCount = reports.filter((report) => !["Draft", "Resolved", "Rejected"].includes(report.status)).length;
+  const activeCount = reports.filter((report) => !["Draft", "Resolved", "Rejected", "Cancelled"].includes(report.status)).length;
   const resolvedCount = reports.filter((report) => report.status === "Resolved").length;
   const stats = [
     { label: "My reports", value: String(reports.length), detail: `${activeCount} active`, icon: FileText },

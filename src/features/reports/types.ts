@@ -4,7 +4,8 @@ export type ReportStatus =
   | "Verified"
   | "In Progress"
   | "Resolved"
-  | "Rejected";
+  | "Rejected"
+  | "Cancelled";
 
 export type ReportSummary = {
   id: string;

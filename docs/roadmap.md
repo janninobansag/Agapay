@@ -26,11 +26,11 @@
 
 ## Milestone 4: Reporting workflow
 
-- [ ] Persist new reports and drafts
-- [ ] Upload and optimize evidence images
-- [ ] Add report editing and cancellation rules
-- [ ] Build staff verification, assignment, and resolution tools
-- [ ] Record an immutable audit trail
+- [x] Persist new reports and drafts
+- [x] Upload and optimize evidence images
+- [x] Add report editing and cancellation rules
+- [x] Build staff verification, assignment, and resolution tools
+- [x] Record an immutable audit trail
 
 ## Milestone 5: Maps and notifications
 

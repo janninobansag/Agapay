@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createReportSchema } from "@/features/reports/schemas";
+import { createReportSchema, draftReportSchema } from "@/features/reports/schemas";
 
 const validReport = {
   categoryId: "streetlight-category",
@@ -42,5 +42,8 @@ describe("createReportSchema", () => {
 
     expect(result.success).toBe(false);
   });
-});
 
+  it("allows an incomplete description and location in a draft", () => {
+    expect(draftReportSchema.safeParse({ ...validReport, description: "", address: "", saveAsDraft: true }).success).toBe(true);
+  });
+});

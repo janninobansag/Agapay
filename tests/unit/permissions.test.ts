@@ -4,6 +4,9 @@ import {
   canManageUsers,
   canReviewReports,
   canViewReport,
+  canCancelReport,
+  canEditReport,
+  getStaffTransition,
 } from "@/lib/permissions/reports";
 
 describe("report authorization", () => {
@@ -30,5 +33,19 @@ describe("report authorization", () => {
     expect(canManageUsers(UserRole.STAFF)).toBe(false);
     expect(canManageUsers(UserRole.RESIDENT)).toBe(false);
   });
-});
 
+  it("limits resident changes to pre-work states", () => {
+    expect(canEditReport("DRAFT")).toBe(true);
+    expect(canEditReport("SUBMITTED")).toBe(true);
+    expect(canEditReport("VERIFIED")).toBe(false);
+    expect(canCancelReport("VERIFIED")).toBe(true);
+    expect(canCancelReport("IN_PROGRESS")).toBe(false);
+  });
+
+  it("enforces the staff lifecycle", () => {
+    expect(getStaffTransition("SUBMITTED", "verify")).toBe("VERIFIED");
+    expect(getStaffTransition("VERIFIED", "start")).toBe("IN_PROGRESS");
+    expect(getStaffTransition("IN_PROGRESS", "resolve")).toBe("RESOLVED");
+    expect(getStaffTransition("RESOLVED", "start")).toBeNull();
+  });
+});

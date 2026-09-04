@@ -15,6 +15,7 @@ src/app/
 |   |-- reports/
 |   |   |-- new/
 |   |   `-- [reportId]/
+|   |       `-- edit/
 |   |-- map/
 |   |-- notifications/
 |   `-- settings/
@@ -22,6 +23,8 @@ src/app/
 |   `-- admin/
 |       |-- reports/
 |       `-- users/
+|-- (staff)/
+|   `-- staff/reports/[reportId]/
 `-- api/
 ```
 
@@ -91,6 +94,13 @@ pure authorization policies that can be unit tested without a web request.
 
 See [authentication.md](authentication.md) for flows, route roles, and current
 security limitations.
+
+## Reporting boundary
+
+Report mutations live in `src/server/actions/reports.ts`. Lifecycle policies are
+pure functions in `src/lib/permissions/reports.ts`, while optimized evidence is
+handled by the server-only `src/lib/storage/evidence.ts` adapter. See
+[reporting-workflow.md](reporting-workflow.md) for transition and failure rules.
 
 ## Testing strategy
 
