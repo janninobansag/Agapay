@@ -7,6 +7,7 @@ const styles: Record<ReportStatus, string> = {
   "In Progress": "bg-amber-50 text-amber-800 ring-amber-200",
   Resolved: "bg-emerald-50 text-emerald-700 ring-emerald-200",
   Rejected: "bg-rose-50 text-rose-700 ring-rose-200",
+  Cancelled: "bg-slate-100 text-slate-600 ring-slate-300",
 };
 
 export function StatusBadge({ status }: { status: ReportStatus }) {

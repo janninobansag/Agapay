@@ -16,11 +16,13 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:verify": "tsx prisma/verify.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "storage:setup": "tsx prisma/setup-storage.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "6.12.0",
     "@prisma/client": "6.12.0",
+    "@supabase/supabase-js": "^2.115.0",
     "bcryptjs": "^3.0.3",
     "clsx": "^2.1.1",
     "dotenv": "^17.4.2",
@@ -30,6 +32,7 @@
     "pg": "^8.23.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
+    "sharp": "^0.35.4",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.5.4"
   },

@@ -41,12 +41,15 @@ The current application contains:
 - A responsive marketing page
 - Resident navigation and dashboard
 - Database-backed report list and detail pages
-- A visual report-submission form
+- Persistent resident drafts, submissions, editing, and cancellation
+- Staff verification, assignment, work-start, rejection, and resolution tools
+- Private, optimized Supabase evidence uploads with signed display URLs
+- Transactional status history, notifications, and append-only audit logs
 - Credentials sign-in, registration, sign-out, and role-specific workspaces
 - Placeholder map, notifications, and settings pages
 
-Report submission does not persist data yet; that mutation belongs to the
-reporting workflow milestone after identity and authorization are available.
+See `reporting-workflow.md` for lifecycle rules and one-time evidence Storage
+setup.
 
 ## PostgreSQL setup
 
@@ -136,3 +139,7 @@ node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'
 
 Copy the printed value into `AUTH_SECRET` in `.env`. Do not reuse the example
 value or expose the generated value in screenshots and commits.
+
+For evidence uploads, also set the three `SUPABASE_*` Storage values documented
+in `.env.example`, then run `npm.cmd run storage:setup`. The database connection
+string alone cannot authorize private object-storage administration.

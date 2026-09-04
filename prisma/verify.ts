@@ -13,7 +13,7 @@ const prisma = new PrismaClient({
 });
 
 async function verify() {
-  const [users, loginEnabledUsers, categories, teams, reports, events, notifications, reportIds] =
+  const [users, loginEnabledUsers, categories, teams, reports, events, notifications, audits, reportIds, auditTriggers] =
     await prisma.$transaction([
       prisma.user.count(),
       prisma.user.count({ where: { passwordHash: { not: null } } }),
@@ -22,10 +22,17 @@ async function verify() {
       prisma.report.count(),
       prisma.reportStatusEvent.count(),
       prisma.notification.count(),
+      prisma.auditLog.count(),
       prisma.report.findMany({
         select: { publicId: true, status: true },
         orderBy: { publicId: "asc" },
       }),
+      prisma.$queryRaw<Array<{ count: number }>>`
+        SELECT count(*)::integer AS count
+        FROM pg_trigger
+        WHERE tgname = 'audit_log_immutable'
+          AND NOT tgisinternal
+      `,
     ]);
 
   console.info({
@@ -36,6 +43,8 @@ async function verify() {
     reports,
     statusEvents: events,
     notifications,
+    auditLogs: audits,
+    immutableAuditTrigger: auditTriggers[0]?.count === 1,
     reportIds,
   });
 }

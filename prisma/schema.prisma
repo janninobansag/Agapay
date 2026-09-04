@@ -27,6 +27,7 @@ enum ReportStatus {
   IN_PROGRESS
   RESOLVED
   REJECTED
+  CANCELLED
 }
 
 enum ReportPriority {

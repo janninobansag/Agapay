@@ -43,13 +43,15 @@ The database enum permits these states:
 
 ```text
 DRAFT -> SUBMITTED -> VERIFIED -> IN_PROGRESS -> RESOLVED
-                  `-> REJECTED
+  |           |          |
+  `-----------+----------+-> CANCELLED
+              `------------> REJECTED
 ```
 
 The schema constrains valid state values, but transition authorization belongs
 in the server action layer. For example, residents may submit drafts, while
-only staff can verify or reject submitted reports. Those policies arrive with
-the identity and workflow milestones.
+only staff can verify or reject submitted reports. These rules are implemented
+in the server action and pure permission-policy layers.
 
 ## Location model
 
@@ -69,6 +71,8 @@ only if distance and polygon queries become a measured requirement.
 - Team memberships cascade when either the team or user is removed.
 
 Application workflows should normally archive records instead of deleting them.
+`AuditLog` is stricter: a PostgreSQL trigger makes every row append-only by
+rejecting updates and deletes at the database level.
 
 ## Seed data
 

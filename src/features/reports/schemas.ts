@@ -10,5 +10,18 @@ export const createReportSchema = z.object({
   saveAsDraft: z.boolean().default(false),
 });
 
-export type CreateReportInput = z.infer<typeof createReportSchema>;
+export const draftReportSchema = createReportSchema.extend({
+  title: z.string().trim().min(3, "Use at least 3 characters.").max(100),
+  description: z.string().trim().max(1000),
+  address: z.string().trim().max(240),
+});
 
+export const staffTransitionSchema = z.object({
+  reportId: z.string().trim().min(1),
+  transition: z.enum(["verify", "reject", "assign", "start", "resolve"]),
+  note: z.string().trim().max(500).optional(),
+  assignedTeamId: z.string().trim().optional(),
+  assignedStaffId: z.string().trim().optional(),
+});
+
+export type CreateReportInput = z.infer<typeof createReportSchema>;
