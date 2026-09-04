@@ -15,7 +15,7 @@
 - [x] Seed realistic demonstration data
 - [x] Replace sample report data with server queries
 - [x] Add input validation with Zod
-- [ ] Apply the migration and seed to a reachable PostgreSQL database
+- [x] Apply the migration and seed to a reachable PostgreSQL database
 
 ## Milestone 3: Identity and permissions
 

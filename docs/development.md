@@ -69,8 +69,9 @@ docker compose up -d postgres
 The committed `compose.yaml` starts PostgreSQL on port 5432 using the development
 credentials already shown in `.env.example`.
 
-Docker and PostgreSQL are not currently installed on this workstation, so the
-database migration and seed could not be executed locally during this milestone.
+Docker and PostgreSQL are not currently installed on this workstation. The
+active development database is therefore the hosted Supabase PostgreSQL project
+configured privately in `.env`.
 
 ## Initialize the database
 
@@ -79,10 +80,12 @@ After PostgreSQL is reachable:
 ```powershell
 npm.cmd run db:deploy
 npm.cmd run db:seed
+npm.cmd run db:verify
 ```
 
 `db:deploy` applies the committed migration without trying to redesign it.
-`db:seed` explicitly creates the deterministic demo dataset. Use
+`db:seed` explicitly creates the deterministic demo dataset. `db:verify`
+performs read-only counts and lists seeded public report IDs. Use
 `npm.cmd run db:migrate -- --name <migration-name>` only when intentionally
 creating a new development migration.
 
@@ -91,6 +94,22 @@ Inspect records with:
 ```powershell
 npm.cmd run db:studio
 ```
+
+## Current database state
+
+The initial migration was applied to Supabase and the demonstration seed was
+verified on September 4, 2026. Expected verification counts are:
+
+| Record type | Count |
+| --- | ---: |
+| Users | 3 |
+| Issue categories | 6 |
+| Response teams | 1 |
+| Reports | 3 |
+| Report status events | 9 |
+| Notifications | 1 |
+
+Run `npm.cmd run db:verify` at any time to perform the same read-only check.
 
 ## Environment variables
 
