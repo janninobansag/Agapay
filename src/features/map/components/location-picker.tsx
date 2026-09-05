@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Map, Marker, NavigationControl, setWorkerUrl } from "maplibre-gl";
 import { MapPin, Search } from "lucide-react";
-import { PHILIPPINES_CENTER, osmRasterStyle } from "@/lib/map/config";
+import { OSM_MAX_ZOOM, PHILIPPINES_CENTER, osmRasterStyle } from "@/lib/map/config";
 
 setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
@@ -40,7 +40,7 @@ export function LocationPicker({ initial }: { initial?: InitialLocation }) {
   useEffect(() => {
     if (!mapContainer.current) return;
     const hasPoint = initial?.latitude != null && initial.longitude != null;
-    const map = new Map({ container: mapContainer.current, style: osmRasterStyle, center: hasPoint ? [initial.longitude!, initial.latitude!] : PHILIPPINES_CENTER, zoom: hasPoint ? 17 : 14 });
+    const map = new Map({ container: mapContainer.current, style: osmRasterStyle, center: hasPoint ? [initial.longitude!, initial.latitude!] : PHILIPPINES_CENTER, zoom: hasPoint ? 17 : 14, maxZoom: OSM_MAX_ZOOM });
     map.addControl(new NavigationControl(), "top-right");
     map.on("click", (event) => moveMarker(event.lngLat.lng, event.lngLat.lat));
     mapRef.current = map;

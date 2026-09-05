@@ -1,0 +1,42 @@
+services:
+  migrate:
+    build:
+      context: .
+      target: migrate
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL to the production PostgreSQL connection string.}
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      target: production
+      args:
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:?Set NEXT_PUBLIC_APP_URL to the public HTTPS URL.}
+        NEXT_PUBLIC_OSM_TILE_URL: ${NEXT_PUBLIC_OSM_TILE_URL:-https://tile.openstreetmap.org/{z}/{x}/{y}.png}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL to the production PostgreSQL connection string.}
+      AUTH_SECRET: ${AUTH_SECRET:?Set a unique production AUTH_SECRET.}
+      AUTH_URL: ${NEXT_PUBLIC_APP_URL:?Set NEXT_PUBLIC_APP_URL to the public HTTPS URL.}
+      AUTH_GOOGLE_ID: ${AUTH_GOOGLE_ID:-}
+      AUTH_GOOGLE_SECRET: ${AUTH_GOOGLE_SECRET:-}
+      AUTH_FACEBOOK_ID: ${AUTH_FACEBOOK_ID:-}
+      AUTH_FACEBOOK_SECRET: ${AUTH_FACEBOOK_SECRET:-}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:?Set NEXT_PUBLIC_APP_URL to the public HTTPS URL.}
+      SUPABASE_URL: ${SUPABASE_URL:?Set SUPABASE_URL for private evidence storage.}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:?Set SUPABASE_SERVICE_ROLE_KEY for private evidence storage.}
+      SUPABASE_STORAGE_BUCKET: ${SUPABASE_STORAGE_BUCKET:-report-evidence}
+      NOMINATIM_BASE_URL: ${NOMINATIM_BASE_URL:-https://nominatim.openstreetmap.org}
+    ports:
+      - "${PORT:-3000}:3000"
+    restart: unless-stopped
+    init: true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s

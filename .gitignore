@@ -3,6 +3,7 @@ node_modules/
 
 # Next.js
 .next/
+.next-e2e/
 out/
 
 # Production builds
@@ -22,6 +23,7 @@ test-results/
 .env
 .env.*
 !.env.example
+!.env.production.example
 
 # Local databases and uploads
 *.db

@@ -3,7 +3,7 @@
 import { hash } from "bcryptjs";
 import { AuthError } from "next-auth";
 import { Prisma } from "@prisma/client";
-import { signIn, signOut } from "@/auth";
+import { signIn, signInRemembered, signOut } from "@/auth";
 import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 import { getPrisma } from "@/lib/db/prisma";
 
@@ -26,7 +26,8 @@ export async function authenticate(
   }
 
   try {
-    await signIn("credentials", {
+    const login = formData.get("rememberMe") === "on" ? signInRemembered : signIn;
+    await login("credentials", {
       email: parsed.data.email,
       password: parsed.data.password,
       redirectTo: "/post-login",

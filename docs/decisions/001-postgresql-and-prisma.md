@@ -6,7 +6,7 @@
 ## Context
 
 Agapay needs relational integrity across residents, reports, categories, teams,
-assignments, notifications, and status history. The portfolio should also show
+assignments, notifications, and status history. The product should also show
 explicit migrations and type-safe server queries.
 
 ## Decision

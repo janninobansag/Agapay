@@ -5,6 +5,48 @@
 Agapay uses Auth.js with its Credentials provider. Passwords are hashed with
 bcrypt using a work factor of 12 and are never stored or logged as plain text.
 Sessions use encrypted, HTTP-only Auth.js JWT cookies with a seven-day lifetime.
+The optional **Remember me** sign-in control issues a 30-day session instead;
+it is intended only for a trusted personal device.
+
+## Google and Facebook sign-in
+
+Google and Facebook are optional OAuth sign-in providers. When enabled, a
+resident can create an Agapay account or return to one with either provider;
+the same flow is used from both the sign-in and sign-up pages. Agapay stores a
+provider account ID in `OAuthAccount` and links it to the local user record, so
+the user keeps one role, reports, and notification settings across sign-in
+methods.
+
+The buttons appear only after the matching environment variables are set:
+
+```text
+AUTH_GOOGLE_ID=...
+AUTH_GOOGLE_SECRET=...
+AUTH_FACEBOOK_ID=...
+AUTH_FACEBOOK_SECRET=...
+```
+
+Create the OAuth applications in Google Cloud Console and Meta for Developers,
+then register these callback URLs (replace the origin for production):
+
+```text
+http://localhost:3000/api/auth/callback/google
+http://localhost:3000/api/auth/callback/facebook
+https://your-domain.example/api/auth/callback/google
+https://your-domain.example/api/auth/callback/facebook
+```
+
+After pulling this change, apply the `OAuthAccount` migration and regenerate
+Prisma before starting the app:
+
+```powershell
+npm.cmd run db:deploy
+npm.cmd run prisma:generate
+```
+
+Do not commit provider secrets. Use the deployed host's secret manager or its
+ignored `.env.production` file. Google/Facebook can only sign in when the
+provider returns an email address; accounts without one are not created.
 
 Auth.js v5 beta is pinned because its `auth`, `handlers`, `signIn`, and `signOut`
 APIs match the current official Next.js integration. Any future upgrade must be
@@ -64,9 +106,10 @@ The email address is intentionally read-only. Changing it safely requires email
 ownership verification, while password changes require a time-limited reset
 flow; neither is simulated with an insecure direct database update.
 
-## Demonstration identities
+## Local development seed accounts
 
-The deterministic seed enables these local portfolio accounts:
+The deterministic seed creates these accounts only for local development and
+controlled test environments:
 
 | Role | Email |
 | --- | --- |
@@ -75,14 +118,22 @@ The deterministic seed enables these local portfolio accounts:
 | Administrator | `admin@agapay.local` |
 
 Their default seed password is `AgapayDemo123!`. Set `SEED_DEMO_PASSWORD` before
-running the seed to override it. These identities are demonstrations, not real
-people, and the default password must not protect a real production system.
+running the seed to override it. These are not public credentials and must not
+be seeded into the production database.
+
+## Guided onboarding
+
+After a user signs in, Agapay shows a role-specific getting-started guide.
+It links a resident to their dashboard, active report, and report form; staff to
+the response queue and assigned report; and an administrator to operational
+reports and user management. The tour can be dismissed for that role on the
+current browser. Clearing site data makes it appear again.
 
 ## Registration rules
 
 - Names contain 2–100 characters.
 - Emails are trimmed, lowercased, validated, and unique.
-- Passwords contain 12–128 characters, uppercase, lowercase, and a number.
+- Passwords contain 8–128 characters, uppercase, lowercase, and a number.
 - Password confirmation must match.
 - Duplicate creation is handled both before insertion and at the database unique
   constraint, covering simultaneous requests.
@@ -92,8 +143,8 @@ people, and the default password must not protect a real production system.
 
 Email verification, password reset, login rate limiting, and multi-factor
 authentication are intentionally deferred. They are required before treating
-Agapay as a production public-service system. Portfolio/demo deployment should
-clearly retain that boundary.
+Agapay as a full public-service system. This release is an early pilot; do not
+collect real resident data until these safeguards are implemented.
 
 ## Verification performed
 

@@ -53,15 +53,42 @@ textarea {
   outline-color: var(--brand);
 }
 
+:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
 ::selection {
   background: var(--brand-soft);
   color: var(--brand-dark);
 }
 
-.landing-grid {
+.landing-hero {
+  background-color: var(--background);
   background-image:
-    linear-gradient(to right, rgb(25 118 91 / 0.055) 1px, transparent 1px),
-    linear-gradient(to bottom, rgb(25 118 91 / 0.055) 1px, transparent 1px);
-  background-size: 36px 36px;
+    linear-gradient(90deg, rgb(247 248 243 / 0.98) 0%, rgb(247 248 243 / 0.94) 38%, rgb(247 248 243 / 0.56) 62%, rgb(247 248 243 / 0.2) 100%),
+    linear-gradient(0deg, rgb(247 248 243 / 0.26), rgb(247 248 243 / 0.1)),
+    url("/images/philippines-hero.png");
+  background-position: center;
+  background-size: cover;
 }
 
+@media (max-width: 1023px) {
+  .landing-hero {
+    background-image:
+      linear-gradient(180deg, rgb(247 248 243 / 0.97) 0%, rgb(247 248 243 / 0.91) 58%, rgb(247 248 243 / 0.62) 100%),
+      url("/images/philippines-hero.png");
+    background-position: 62% center;
+  }
+}

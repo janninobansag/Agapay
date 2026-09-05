@@ -80,12 +80,12 @@ rejecting updates and deletes at the database level.
 records. It creates:
 
 - Six issue categories
-- One demonstration service area
+- One local development service area
 - One resident, one staff member, and one administrator
 - One response team and membership
 - Three reports across verified, in-progress, and resolved states
 - Status histories and a resident notification
 
-Demo accounts receive bcrypt password hashes from the deterministic seed. The
-plain demonstration password is documented in `authentication.md` and can be
+Seed accounts receive bcrypt password hashes from the deterministic seed. The
+plain seed password is documented in `authentication.md` and can be
 overridden through `SEED_DEMO_PASSWORD`.

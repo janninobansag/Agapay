@@ -9,6 +9,8 @@ MapLibre GL JS renders raster OpenStreetMap tiles directly in the browser. The
 tile URL is configured through `NEXT_PUBLIC_OSM_TILE_URL`, so a production host
 can move to another OSM-derived provider without rebuilding application logic.
 Attribution remains visible in MapLibre's standard attribution control.
+Both interactive maps are limited to zoom level 19, preventing requests for
+unsupported higher-zoom raster tiles.
 
 `scripts/copy-maplibre-worker.mjs` copies MapLibre 6's worker and shared module
 to `public/maplibre` before `dev` and `build`. These generated files are ignored
@@ -36,7 +38,7 @@ require both coordinates inside the broad Philippines bounds; drafts may remain
 incomplete. The human-readable address and coordinates are validated again by
 the server action and never trusted solely because they came from the picker.
 
-The public Nominatim and OSM tile services are suitable only for modest portfolio
+The public Nominatim and OSM tile services are suitable only for modest pilot
 traffic. A larger or commercial deployment must configure a provider with an
 appropriate service agreement or self-host the services.
 

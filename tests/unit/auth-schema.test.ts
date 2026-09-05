@@ -22,6 +22,28 @@ describe("authentication schemas", () => {
     expect(result.success).toBe(false);
   });
 
+  it("accepts a strong eight-character registration password", () => {
+    const result = signUpSchema.safeParse({
+      name: "New Resident",
+      email: "resident@example.com",
+      password: "Strong8A",
+      confirmPassword: "Strong8A",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a strong password shorter than eight characters", () => {
+    const result = signUpSchema.safeParse({
+      name: "New Resident",
+      email: "resident@example.com",
+      password: "Short1A",
+      confirmPassword: "Short1A",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
   it("rejects mismatched registration passwords", () => {
     const result = signUpSchema.safeParse({
       name: "New Resident",
@@ -33,4 +55,3 @@ describe("authentication schemas", () => {
     expect(result.success).toBe(false);
   });
 });
-

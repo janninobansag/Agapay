@@ -35,4 +35,9 @@ export const staffTransitionSchema = z.object({
   assignedStaffId: z.string().trim().optional(),
 });
 
+export const reportFiltersSchema = z.object({
+  q: z.string().trim().max(100).catch(""),
+  status: z.enum(["DRAFT", "SUBMITTED", "VERIFIED", "IN_PROGRESS", "RESOLVED", "REJECTED", "CANCELLED"]).optional().catch(undefined),
+});
+
 export type CreateReportInput = z.infer<typeof createReportSchema>;

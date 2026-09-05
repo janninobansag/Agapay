@@ -12,7 +12,7 @@ const styles: Record<ReportStatus, string> = {
 
 export function StatusBadge({ status }: { status: ReportStatus }) {
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${styles[status]}`}>
+    <span className={`inline-flex shrink-0 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${styles[status]}`}>
       {status}
     </span>
   );
