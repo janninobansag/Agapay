@@ -27,7 +27,6 @@
 ## Milestone 4: Reporting workflow
 
 - [x] Persist new reports and drafts
-- [x] Upload and optimize evidence images
 - [x] Add report editing and cancellation rules
 - [x] Build staff verification, assignment, and resolution tools
 - [x] Record an immutable audit trail

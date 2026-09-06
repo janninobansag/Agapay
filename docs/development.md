@@ -87,7 +87,6 @@ The current application contains:
 - Route-aware resident, staff, and administrator navigation
 - Persistent resident drafts, submissions, editing, and cancellation
 - Staff verification, assignment, work-start, rejection, and resolution tools
-- Private, optimized Supabase evidence uploads with signed display URLs
 - Transactional status history, notifications, and append-only audit logs
 - Interactive OpenStreetMap community and report-location maps
 - Policy-compliant, cached Philippines location search
@@ -95,8 +94,7 @@ The current application contains:
 - Persistent resident profile and notification-preference settings
 - Credentials sign-in, registration, sign-out, and role-specific workspaces
 
-See `reporting-workflow.md` for lifecycle rules and one-time evidence Storage
-setup.
+See `reporting-workflow.md` for lifecycle rules.
 
 ## PostgreSQL setup
 
@@ -181,9 +179,6 @@ node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'
 Copy the printed value into `AUTH_SECRET` in `.env`. Do not reuse the example
 value or expose the generated value in screenshots and commits.
 
-For evidence uploads, also set the three `SUPABASE_*` Storage values documented
-in `.env.example`, then run `npm.cmd run storage:setup`. The database connection
-string alone cannot authorize private object-storage administration.
 
 Map development works without an API key. The default tile and Nominatim URLs
 are documented in `.env.example` and can be replaced per environment. Read
