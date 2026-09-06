@@ -46,6 +46,16 @@ The migration command is deliberately separate from the web container. Run it
 once per release before scaling or replacing app containers. The Compose `app`
 service also waits for a successful migration when started from a clean stack.
 
+## Supabase Data API protection
+
+Agapay uses its trusted Next.js server and Prisma for all database access; it
+does not query application tables directly from a browser with Supabase keys.
+The `20260910000000_secure_public_schema` migration enables Row Level Security
+on the application tables and revokes Supabase `anon` and `authenticated` Data
+API access. Apply it before a public release. Do not enable ad-hoc browser RLS
+policies in the Supabase dashboard, because this application uses Auth.js rather
+than Supabase Auth.
+
 Verify readiness without exposing private configuration:
 
 ```powershell
