@@ -5,14 +5,14 @@ describe("authentication schemas", () => {
   it("normalizes email addresses during sign in", () => {
     const result = signInSchema.parse({
       identifier: "  Resident@Agapay.Local ",
-      password: "AgapayDemo123!",
+      password: "A-Local-Test-Password1",
     });
 
     expect(result.identifier).toBe("resident@agapay.local");
   });
 
   it("accepts a username during sign in", () => {
-    const result = signInSchema.parse({ identifier: " Admin ", password: "Jan232004" });
+    const result = signInSchema.parse({ identifier: " Admin ", password: "A-Local-Test-Password1" });
     expect(result.identifier).toBe("admin");
   });
 

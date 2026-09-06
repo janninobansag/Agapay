@@ -25,15 +25,15 @@ function FieldErrors({ errors }: { errors?: string[] }) {
   return errors?.map((error) => <p className="mt-1 text-xs text-rose-700" key={error}>{error}</p>);
 }
 
-function PasswordReset({ user }: { user: ManagedUser }) {
+function PasswordReset({ user, currentUserId }: { user: ManagedUser; currentUserId: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [state, formAction] = useActionState(resetUserPassword, initialState);
-  if (user.role === "ADMIN") return <span className="text-xs text-muted">Protected account</span>;
+  if (user.role === "ADMIN" && user.id !== currentUserId) return <span className="text-xs text-muted">Protected account</span>;
 
   return (
     <div>
       <button className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-xs font-bold text-brand-dark hover:border-brand/40" onClick={() => setIsOpen((value) => !value)} type="button">
-        <KeyRound aria-hidden="true" size={14} /> Reset password
+        <KeyRound aria-hidden="true" size={14} /> {user.id === currentUserId ? "Change my password" : "Reset password"}
       </button>
       {isOpen && (
         <form action={formAction} className="mt-3 grid gap-2 rounded-xl bg-surface-muted/70 p-3 sm:grid-cols-2">
@@ -94,7 +94,7 @@ function PermanentDelete({ user }: { user: ManagedUser }) {
   );
 }
 
-export function AdminUserManagement({ users }: { users: ManagedUser[] }) {
+export function AdminUserManagement({ currentUserId, users }: { currentUserId: string; users: ManagedUser[] }) {
   const [state, formAction] = useActionState(createStaffAccount, initialState);
 
   return (
@@ -120,7 +120,7 @@ export function AdminUserManagement({ users }: { users: ManagedUser[] }) {
                 <td className="p-4"><p className="font-bold text-brand-dark">{user.name}</p><p className="mt-1 text-xs text-muted">{user.email}</p>{user.username && <p className="mt-1 font-mono text-xs text-brand">@{user.username}</p>}</td>
                 <td className="p-4 font-semibold">{user.role}</td>
                 <td className="p-4"><span className={user.status === "ACTIVE" ? "rounded-full bg-brand-soft px-2.5 py-1 text-xs font-bold text-brand-dark" : "rounded-full bg-rose-50 px-2.5 py-1 text-xs font-bold text-rose-700"}>{user.status}</span></td>
-                <td className="space-y-3 p-4"><AccessControl user={user} /><PasswordReset user={user} /><PermanentDelete user={user} /></td>
+                <td className="space-y-3 p-4"><AccessControl user={user} /><PasswordReset currentUserId={currentUserId} user={user} /><PermanentDelete user={user} /></td>
               </tr>
             ))}
           </tbody>

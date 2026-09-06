@@ -123,8 +123,8 @@ export async function resetUserPassword(
     select: { id: true, name: true, role: true, username: true },
   });
   if (!target) return { message: "Account not found." };
-  if (target.id === admin.id || target.role === UserRole.ADMIN || target.username === "admin") {
-    return { message: "The fixed administrator password cannot be changed here." };
+  if ((target.role === UserRole.ADMIN || target.username === "admin") && target.id !== admin.id) {
+    return { message: "Another administrator's password cannot be changed here." };
   }
 
   const passwordHash = await hash(parsed.data.password, 12);
@@ -132,7 +132,7 @@ export async function resetUserPassword(
     await tx.user.update({ where: { id: target.id }, data: { passwordHash } });
     await tx.auditLog.create({
       data: {
-        action: "USER_PASSWORD_RESET",
+          action: target.id === admin.id ? "ADMIN_PASSWORD_CHANGED" : "USER_PASSWORD_RESET",
         entityType: "User",
         entityId: target.id,
         actorId: admin.id,

@@ -161,17 +161,11 @@ verified on September 4, 2026. Expected verification counts are:
 
 Run `npm.cmd run db:verify` at any time to perform the same read-only check.
 
-## Demo sign-in
+## Local seed data
 
-After running the current seed, use `AgapayDemo123!` with one of these emails:
-
-- Resident: `resident@agapay.local`
-- Staff: `staff@agapay.local`
-- Administrator: `admin@agapay.local`
-
-Override the shared development password by setting `SEED_DEMO_PASSWORD` before
-rerunning `npm.cmd run db:seed`. Do not use the seed password for real
-users or a public production administration account.
+Set private `SEED_DEMO_PASSWORD` and `ADMIN_INITIAL_PASSWORD` values in your
+ignored `.env` before running `npm.cmd run db:seed`. The seed is only for local
+development or controlled staging and must never run against production.
 
 ## Environment variables
 

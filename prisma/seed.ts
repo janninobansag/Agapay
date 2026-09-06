@@ -29,11 +29,15 @@ const categories = [
 ] as const;
 
 async function seed() {
-  const demoPasswordHash = await hash(
-    process.env.SEED_DEMO_PASSWORD || "AgapayDemo123!",
-    12,
-  );
-  const administratorPasswordHash = await hash("Jan232004", 12);
+  const demoPassword = process.env.SEED_DEMO_PASSWORD;
+  const administratorPassword = process.env.ADMIN_INITIAL_PASSWORD;
+  if (!demoPassword || !administratorPassword) {
+    throw new Error(
+      "SEED_DEMO_PASSWORD and ADMIN_INITIAL_PASSWORD are required for local or staging seeds. Never run the seed in production.",
+    );
+  }
+  const demoPasswordHash = await hash(demoPassword, 12);
+  const administratorPasswordHash = await hash(administratorPassword, 12);
 
   const categoryRecords = await Promise.all(
     categories.map(([slug, name, description]) =>
