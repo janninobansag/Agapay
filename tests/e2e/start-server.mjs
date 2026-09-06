@@ -3,11 +3,11 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
+const nextCli = resolve(root, "node_modules/next/dist/bin/next");
 const port = process.argv[2] ?? "3100";
 const baseUrl = `http://127.0.0.1:${port}`;
-const standaloneDirectory = resolve(root, ".next-e2e/standalone");
-const child = spawn(process.execPath, ["server.js"], {
-  cwd: standaloneDirectory,
+const child = spawn(process.execPath, [nextCli, "start", "--port", port, "--hostname", "127.0.0.1"], {
+  cwd: root,
   env: {
     ...process.env,
     AUTH_TRUST_HOST: "true",
