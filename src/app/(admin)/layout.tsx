@@ -5,10 +5,11 @@ const links = [
   { href: "/admin", label: "Overview" },
   { href: "/admin/reports", label: "Reports" },
   { href: "/admin/users", label: "Users" },
+  { href: "/admin/categories", label: "Categories" },
+  { href: "/admin/teams", label: "Teams" },
 ];
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = await requireRole(["ADMIN"]);
   return <RoleShell areaLabel="Administration" links={links} user={user}>{children}</RoleShell>;
 }
-

@@ -4,11 +4,16 @@ import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 describe("authentication schemas", () => {
   it("normalizes email addresses during sign in", () => {
     const result = signInSchema.parse({
-      email: "  Resident@Agapay.Local ",
+      identifier: "  Resident@Agapay.Local ",
       password: "AgapayDemo123!",
     });
 
-    expect(result.email).toBe("resident@agapay.local");
+    expect(result.identifier).toBe("resident@agapay.local");
+  });
+
+  it("accepts a username during sign in", () => {
+    const result = signInSchema.parse({ identifier: " Admin ", password: "Jan232004" });
+    expect(result.identifier).toBe("admin");
   });
 
   it("requires a strong registration password", () => {

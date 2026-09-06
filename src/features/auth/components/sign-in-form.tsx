@@ -12,9 +12,9 @@ export function SignInForm() {
   return (
     <form action={formAction} className="mt-8 space-y-5">
       <div>
-        <label className="text-sm font-bold" htmlFor="email">Email address</label>
-        <input autoComplete="email" className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm" id="email" name="email" placeholder="you@example.com" required type="email" />
-        {state.errors?.email?.map((error) => <p className="mt-1 text-xs text-rose-700" key={error}>{error}</p>)}
+        <label className="text-sm font-bold" htmlFor="identifier">Email address or username</label>
+        <input autoComplete="username" className="mt-2 h-12 w-full rounded-xl border border-border bg-background px-4 text-sm" id="identifier" name="identifier" placeholder="you@example.com" required type="text" />
+        {state.errors?.identifier?.map((error) => <p className="mt-1 text-xs text-rose-700" key={error}>{error}</p>)}
       </div>
       <div>
         <div className="flex justify-between"><label className="text-sm font-bold" htmlFor="password">Password</label><span className="text-xs text-muted">Minimum 8 characters</span></div>

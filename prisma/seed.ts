@@ -33,6 +33,7 @@ async function seed() {
     process.env.SEED_DEMO_PASSWORD || "AgapayDemo123!",
     12,
   );
+  const administratorPasswordHash = await hash("Jan232004", 12);
 
   const categoryRecords = await Promise.all(
     categories.map(([slug, name, description]) =>
@@ -76,12 +77,18 @@ async function seed() {
 
   await prisma.user.upsert({
     where: { email: "admin@agapay.local" },
-    update: { name: "Agapay Administrator", role: UserRole.ADMIN, passwordHash: demoPasswordHash },
-    create: {
-      email: "admin@agapay.local",
+    update: {
+      username: "admin",
       name: "Agapay Administrator",
       role: UserRole.ADMIN,
-      passwordHash: demoPasswordHash,
+      passwordHash: administratorPasswordHash,
+    },
+    create: {
+      email: "admin@agapay.local",
+      username: "admin",
+      name: "Agapay Administrator",
+      role: UserRole.ADMIN,
+      passwordHash: administratorPasswordHash,
     },
   });
 

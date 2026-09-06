@@ -121,6 +121,42 @@ Their default seed password is `AgapayDemo123!`. Set `SEED_DEMO_PASSWORD` before
 running the seed to override it. These are not public credentials and must not
 be seeded into the production database.
 
+The local administrator is intentionally seeded with username `admin` and
+password `Jan232004`. It is a development bootstrap account only: change or
+remove it before any public launch. Agapay accepts either an email address or a
+username on the sign-in screen, but only this bootstrap administrator receives a
+username from the seed.
+
+## Administrator account management
+
+Only an authenticated administrator can create staff accounts from
+`/admin/users`. The public sign-up route creates residents only. Administrators
+can deactivate and reactivate resident or staff accounts; deactivation is a
+soft delete that preserves reports and audit history, and blocks future access.
+They can also set a strong replacement password for a resident or staff member.
+Every staff creation, access change, and password reset writes an audit record.
+
+Permanent deletion is separate from deactivation. It requires the administrator
+to type `DELETE` followed by the exact email address of the selected user.
+PostgreSQL then deletes that user's reports, report evidence, report
+notifications, and status history. The action cannot be undone; the audit log
+retains only deletion metadata. Older audit entries created by the deleted user
+remain immutable, but their actor reference is anonymized to preserve the
+deletion request.
+
+The bootstrap administrator is protected from deactivation and from password
+changes in the user-management screen so there is always a recovery account in
+local development.
+
+## Operational administration
+
+Administrators can manage issue categories and response teams from
+`/admin/categories` and `/admin/teams`. Categories can be added or marked
+inactive without breaking existing reports. Response teams can be created,
+given a contact email, activated or deactivated, and assigned active staff
+members. These changes are restricted to administrators and recorded in the
+audit log.
+
 ## Guided onboarding
 
 After a user signs in, Agapay shows a role-specific getting-started guide.

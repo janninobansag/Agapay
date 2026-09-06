@@ -17,7 +17,7 @@ export async function authenticate(
   formData: FormData,
 ): Promise<AuthFormState> {
   const parsed = signInSchema.safeParse({
-    email: formData.get("email"),
+    identifier: formData.get("identifier"),
     password: formData.get("password"),
   });
 
@@ -28,7 +28,7 @@ export async function authenticate(
   try {
     const login = formData.get("rememberMe") === "on" ? signInRemembered : signIn;
     await login("credentials", {
-      email: parsed.data.email,
+      identifier: parsed.data.identifier,
       password: parsed.data.password,
       redirectTo: "/post-login",
     });
@@ -91,7 +91,7 @@ export async function registerResident(
 
   try {
     await signIn("credentials", {
-      email: parsed.data.email,
+      identifier: parsed.data.email,
       password: parsed.data.password,
       redirectTo: "/dashboard",
     });

@@ -53,6 +53,7 @@ enum NotificationType {
 model User {
   id                        String     @id @default(cuid())
   email                     String     @unique @db.VarChar(320)
+  username                  String?    @unique @db.VarChar(30)
   name                      String     @db.VarChar(100)
   passwordHash              String?
   role                      UserRole   @default(RESIDENT)
@@ -165,7 +166,7 @@ model Report {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
-  reporter      User                @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Restrict)
+  reporter      User                @relation("ReportReporter", fields: [reporterId], references: [id], onDelete: Cascade)
   category      IssueCategory       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   serviceArea   ServiceArea?        @relation(fields: [serviceAreaId], references: [id], onDelete: SetNull)
   assignedTeam  ResponseTeam?       @relation(fields: [assignedTeamId], references: [id], onDelete: SetNull)

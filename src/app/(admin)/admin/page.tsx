@@ -1,4 +1,5 @@
 import { ClipboardList, Tags, UsersRound, Wrench } from "lucide-react";
+import Link from "next/link";
 import { DemoProductTour } from "@/components/demo/demo-product-tour";
 import { requireRole } from "@/lib/auth/user";
 import { getPrisma } from "@/lib/db/prisma";
@@ -15,10 +16,10 @@ export default async function AdminPage() {
     getPrisma().responseTeam.count({ where: { isActive: true } }),
   ]);
   const cards = [
-    { label: "Users", value: users, icon: UsersRound },
-    { label: "Reports", value: reports, icon: ClipboardList },
-    { label: "Categories", value: categories, icon: Tags },
-    { label: "Response teams", value: teams, icon: Wrench },
+    { label: "Users", value: users, icon: UsersRound, href: "/admin/users" },
+    { label: "Reports", value: reports, icon: ClipboardList, href: "/admin/reports" },
+    { label: "Categories", value: categories, icon: Tags, href: "/admin/categories" },
+    { label: "Response teams", value: teams, icon: Wrench, href: "/admin/teams" },
   ];
 
   return (
@@ -28,12 +29,12 @@ export default async function AdminPage() {
       <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-brand-dark">System overview</h1>
       <p className="mt-2 text-muted">Manage Agapay’s users, reports, and operational configuration.</p>
       <section className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map(({ label, value, icon: Icon }) => (
-          <article className="rounded-2xl border border-border bg-surface p-5" key={label}>
+        {cards.map(({ label, value, icon: Icon, href }) => (
+          <Link className="rounded-2xl border border-border bg-surface p-5 transition hover:border-brand/30 hover:shadow-sm" href={href} key={label}>
             <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand"><Icon size={19} /></span>
             <p className="mt-6 text-3xl font-bold text-brand-dark">{value}</p>
             <p className="mt-1 text-sm font-semibold text-muted">{label}</p>
-          </article>
+          </Link>
         ))}
       </section>
     </div>

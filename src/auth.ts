@@ -28,15 +28,20 @@ function createAuthConfig(sessionMaxAge: number): NextAuthConfig {
     providers: [
       Credentials({
         credentials: {
-          email: { label: "Email", type: "email" },
+          identifier: { label: "Email address or username", type: "text" },
           password: { label: "Password", type: "password" },
         },
         async authorize(credentials) {
           const parsed = signInSchema.safeParse(credentials);
           if (!parsed.success) return null;
 
-          const user = await getPrisma().user.findUnique({
-            where: { email: parsed.data.email },
+          const user = await getPrisma().user.findFirst({
+            where: {
+              OR: [
+                { email: parsed.data.identifier },
+                { username: parsed.data.identifier },
+              ],
+            },
             select: {
               id: true,
               email: true,
