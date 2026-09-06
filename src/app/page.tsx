@@ -130,8 +130,8 @@ export default function HomePage() {
               </a>
             </div>
           </div>
-          <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 Agapay. Community-service pilot.</p>
+          <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/70 sm:flex-row sm:items-center sm:justify-between">
+            <p>&copy; 2026 Agapay. Community-service pilot.</p>
             <p>Communities that respond.</p>
           </div>
         </div>
