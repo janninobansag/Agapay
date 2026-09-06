@@ -8,7 +8,6 @@ a disposable database beside the application.
 
 - Docker Engine with Docker Compose v2
 - A managed PostgreSQL database reachable from the deployment host
-- A configured private Supabase Storage bucket for report evidence
 - A public HTTPS domain, including its final `https://` origin
 
 Copy `.env.production.example` to a local `.env.production` file and set every
@@ -71,8 +70,8 @@ reachable; it returns `503` for unconfigured or unreachable database access.
 2. Build the image with the final HTTPS domain as `NEXT_PUBLIC_APP_URL`.
 3. Run the `migrate` target once.
 4. Deploy the `production` image behind HTTPS and route traffic to port 3000.
-5. Confirm `/api/health`, sign-in, a protected route redirect, and evidence
-   upload in the deployed environment.
+5. Confirm `/api/health`, sign-in, and a protected route redirect in the deployed
+   environment.
 6. Configure backups, log retention, and alerting in the PostgreSQL provider.
 
 Do not run `db:seed` against production. Seeded accounts and sample reports are

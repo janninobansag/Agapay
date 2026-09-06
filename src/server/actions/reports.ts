@@ -8,7 +8,6 @@ import { requireRole } from "@/lib/auth/user";
 import { getPrisma } from "@/lib/db/prisma";
 import { canCancelReport, canEditReport, getStaffTransition } from "@/lib/permissions/reports";
 import { createReportPublicId } from "@/lib/reports/public-id";
-import { removeEvidence, uploadEvidence } from "@/lib/storage/evidence";
 
 export type ReportFormState = { message?: string; errors?: Record<string, string[]> };
 
@@ -47,10 +46,7 @@ export async function createReport(
   if (!(await validateCategory(parsed.data.categoryId))) return { message: "That category is no longer available." };
 
   const publicId = createReportPublicId();
-  const photo = formData.get("photo");
-  let media: Awaited<ReturnType<typeof uploadEvidence>> | null = null;
   try {
-    if (photo instanceof File && photo.size > 0) media = await uploadEvidence(photo, user.id, publicId);
     await getPrisma().$transaction(async (tx) => {
       const report = await tx.report.create({
         data: {
@@ -64,7 +60,6 @@ export async function createReport(
           longitude: parsed.data.longitude,
           status: isDraft ? "DRAFT" : "SUBMITTED",
           submittedAt: isDraft ? null : new Date(),
-          media: media ? { create: media } : undefined,
         },
       });
       await tx.reportStatusEvent.create({ data: { reportId: report.id, actorId: user.id, toStatus: report.status, note: isDraft ? "Saved by the resident." : "Submitted for staff review." } });
@@ -72,7 +67,6 @@ export async function createReport(
       if (!isDraft && user.inAppNotificationsEnabled) await tx.notification.create({ data: { userId: user.id, reportId: report.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
-    if (media) await removeEvidence(media.objectKey);
     return { message: errorMessage(error) };
   }
   revalidatePath("/dashboard");
@@ -86,7 +80,7 @@ export async function updateReport(
   formData: FormData,
 ): Promise<ReportFormState> {
   const user = await requireRole(["RESIDENT"]);
-  const existing = await getPrisma().report.findFirst({ where: { publicId, reporterId: user.id }, include: { media: { select: { id: true } } } });
+  const existing = await getPrisma().report.findFirst({ where: { publicId, reporterId: user.id } });
   if (!existing) return { message: "Report not found." };
   if (!canEditReport(existing.status)) return { message: "This report can no longer be edited." };
   const isDraft = formData.get("intent") === "draft";
@@ -94,24 +88,17 @@ export async function updateReport(
   if (!parsed.success) return { errors: parsed.error.flatten().fieldErrors };
   if (!(await validateCategory(parsed.data.categoryId))) return { message: "That category is no longer available." };
 
-  const photo = formData.get("photo");
-  let media: Awaited<ReturnType<typeof uploadEvidence>> | null = null;
   try {
-    if (photo instanceof File && photo.size > 0) {
-      if (existing.media.length >= 3) return { message: "A report can contain up to three evidence images." };
-      media = await uploadEvidence(photo, user.id, publicId);
-    }
     const nextStatus: ReportStatus = isDraft && existing.status === "DRAFT" ? "DRAFT" : "SUBMITTED";
     await getPrisma().$transaction(async (tx) => {
       const current = await tx.report.findUnique({ where: { id: existing.id }, select: { status: true } });
       if (!current || current.status !== existing.status || !canEditReport(current.status)) throw new Error("The report changed while you were editing it. Refresh and try again.");
-      await tx.report.update({ where: { id: existing.id }, data: { categoryId: parsed.data.categoryId, title: parsed.data.title, description: parsed.data.description, address: parsed.data.address, latitude: parsed.data.latitude, longitude: parsed.data.longitude, status: nextStatus, submittedAt: nextStatus === "SUBMITTED" ? existing.submittedAt ?? new Date() : null, media: media ? { create: media } : undefined } });
+      await tx.report.update({ where: { id: existing.id }, data: { categoryId: parsed.data.categoryId, title: parsed.data.title, description: parsed.data.description, address: parsed.data.address, latitude: parsed.data.latitude, longitude: parsed.data.longitude, status: nextStatus, submittedAt: nextStatus === "SUBMITTED" ? existing.submittedAt ?? new Date() : null } });
       if (existing.status !== nextStatus) await tx.reportStatusEvent.create({ data: { reportId: existing.id, actorId: user.id, fromStatus: existing.status, toStatus: nextStatus, note: "Draft submitted for staff review." } });
-      await tx.auditLog.create({ data: { action: existing.status !== nextStatus ? "REPORT_SUBMITTED" : "REPORT_UPDATED", entityType: "Report", entityId: existing.id, actorId: user.id, metadata: { publicId, evidenceAdded: Boolean(media) } } });
+      await tx.auditLog.create({ data: { action: existing.status !== nextStatus ? "REPORT_SUBMITTED" : "REPORT_UPDATED", entityType: "Report", entityId: existing.id, actorId: user.id, metadata: { publicId } } });
       if (existing.status !== nextStatus && user.inAppNotificationsEnabled) await tx.notification.create({ data: { userId: user.id, reportId: existing.id, type: "REPORT_SUBMITTED", title: "Report submitted", body: `${publicId} was submitted for staff review.` } });
     });
   } catch (error) {
-    if (media) await removeEvidence(media.objectKey);
     return { message: errorMessage(error) };
   }
   revalidatePath("/dashboard");

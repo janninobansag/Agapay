@@ -124,8 +124,8 @@ Every staff creation, access change, and password reset writes an audit record.
 
 Permanent deletion is separate from deactivation. It requires the administrator
 to type `DELETE` followed by the exact email address of the selected user.
-PostgreSQL then deletes that user's reports, report evidence, report
-notifications, and status history. The action cannot be undone; the audit log
+PostgreSQL then deletes that user's reports, report notifications, and status
+history. The action cannot be undone; the audit log
 retains only deletion metadata. Older audit entries created by the deleted user
 remain immutable, but their actor reference is anonymized to preserve the
 deletion request.

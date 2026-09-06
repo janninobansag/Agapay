@@ -99,8 +99,7 @@ security limitations.
 ## Reporting boundary
 
 Report mutations live in `src/server/actions/reports.ts`. Lifecycle policies are
-pure functions in `src/lib/permissions/reports.ts`, while optimized evidence is
-handled by the server-only `src/lib/storage/evidence.ts` adapter. See
+pure functions in `src/lib/permissions/reports.ts`. See
 [reporting-workflow.md](reporting-workflow.md) for transition and failure rules.
 
 ## Maps and notification boundary

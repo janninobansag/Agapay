@@ -81,7 +81,7 @@ function PermanentDelete({ user }: { user: ManagedUser }) {
       {isOpen && (
         <form action={formAction} className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3">
           <input name="userId" type="hidden" value={user.id} />
-          <p className="text-xs font-bold text-rose-900">This permanently deletes {user.name}, their reports, evidence, notifications, and report history. It cannot be undone.</p>
+          <p className="text-xs font-bold text-rose-900">This permanently deletes {user.name}, their reports, notifications, and report history. It cannot be undone.</p>
           <label className="mt-3 block text-xs font-bold text-rose-900">Type <span className="font-mono">DELETE {user.email}</span> to confirm
             <input autoComplete="off" className="mt-1 h-10 w-full rounded-lg border border-rose-200 bg-surface px-3 text-sm text-brand-dark" name="confirmation" required type="text" />
           </label>
