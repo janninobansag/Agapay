@@ -23,7 +23,6 @@ describe.skipIf(!prisma)("report lifecycle integration", () => {
   afterAll(async () => {
     if (!prisma) return;
     if (reportId) {
-      await prisma.auditLog.deleteMany({ where: { entityId: reportId } });
       await prisma.report.deleteMany({ where: { id: reportId } });
     }
     if (userId) await prisma.user.deleteMany({ where: { id: userId } });
