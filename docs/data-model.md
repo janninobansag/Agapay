@@ -86,6 +86,5 @@ records. It creates:
 - Three reports across verified, in-progress, and resolved states
 - Status histories and a resident notification
 
-Seed accounts receive bcrypt password hashes from the deterministic seed. The
-plain seed password is documented in `authentication.md` and can be
-overridden through `SEED_DEMO_PASSWORD`.
+Seed accounts receive bcrypt password hashes from private local environment
+values. No usable seed credential is stored in source control.

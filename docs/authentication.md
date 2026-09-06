@@ -106,26 +106,12 @@ The email address is intentionally read-only. Changing it safely requires email
 ownership verification, while password changes require a time-limited reset
 flow; neither is simulated with an insecure direct database update.
 
-## Local development seed accounts
+## Local development seed data
 
-The deterministic seed creates these accounts only for local development and
-controlled test environments:
-
-| Role | Email |
-| --- | --- |
-| Resident | `resident@agapay.local` |
-| Staff | `staff@agapay.local` |
-| Administrator | `admin@agapay.local` |
-
-Their default seed password is `AgapayDemo123!`. Set `SEED_DEMO_PASSWORD` before
-running the seed to override it. These are not public credentials and must not
-be seeded into the production database.
-
-The local administrator is intentionally seeded with username `admin` and
-password `Jan232004`. It is a development bootstrap account only: change or
-remove it before any public launch. Agapay accepts either an email address or a
-username on the sign-in screen, but only this bootstrap administrator receives a
-username from the seed.
+The deterministic seed is for local development and controlled staging only.
+It requires private `SEED_DEMO_PASSWORD` and `ADMIN_INITIAL_PASSWORD` values in
+an ignored environment file. It must never run against production and no usable
+seed credentials are stored in source control.
 
 ## Administrator account management
 
@@ -144,9 +130,9 @@ retains only deletion metadata. Older audit entries created by the deleted user
 remain immutable, but their actor reference is anonymized to preserve the
 deletion request.
 
-The bootstrap administrator is protected from deactivation and from password
-changes in the user-management screen so there is always a recovery account in
-local development.
+The administrator account is protected from deactivation and permanent deletion.
+Only the signed-in administrator can change its own password from the user
+management screen; other administrators cannot reset it.
 
 ## Operational administration
 
