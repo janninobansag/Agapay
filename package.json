@@ -7,7 +7,7 @@
     "predev": "node scripts/copy-maplibre-worker.mjs",
     "dev": "next dev --webpack",
     "prebuild": "node scripts/copy-maplibre-worker.mjs",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
