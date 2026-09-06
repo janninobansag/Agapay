@@ -1,27 +1,31 @@
-import { ArrowUpRight, CheckCircle2, Clock3, FileText, Plus, UsersRound } from "lucide-react";
+import { ArrowUpRight, Bell, CheckCircle2, Clock3, FileText, Plus } from "lucide-react";
 import Link from "next/link";
 import { DatabaseState } from "@/components/feedback/database-state";
+import { DemoProductTour } from "@/components/demo/demo-product-tour";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { requireUser } from "@/lib/auth/user";
 import { getResidentReports } from "@/server/queries/reports";
+import { getUnreadNotificationCount } from "@/server/queries/notifications";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const user = await requireUser();
   const { data: reports, availability } = await getResidentReports();
+  const unreadCount = await getUnreadNotificationCount(user.id);
   const activeCount = reports.filter((report) => !["Draft", "Resolved", "Rejected", "Cancelled"].includes(report.status)).length;
   const resolvedCount = reports.filter((report) => report.status === "Resolved").length;
   const stats = [
     { label: "My reports", value: String(reports.length), detail: `${activeCount} active`, icon: FileText },
     { label: "Active reports", value: String(activeCount), detail: "Awaiting resolution", icon: Clock3 },
     { label: "Resolved", value: String(resolvedCount), detail: "From your reports", icon: CheckCircle2 },
-    { label: "Service area", value: "Demo", detail: "Barangay Demo", icon: UsersRound },
+    { label: "Unread updates", value: String(unreadCount), detail: "In your inbox", icon: Bell },
   ];
 
   return (
     <div>
       <DatabaseState availability={availability} />
+      <DemoProductTour role="RESIDENT" />
       <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.14em] text-brand">Resident dashboard</p>
@@ -65,7 +69,7 @@ export default async function DashboardPage() {
           {reports.length === 0 && (
             <div className="px-5 py-12 text-center sm:px-6">
               <p className="font-bold text-brand-dark">No reports to show</p>
-              <p className="mt-2 text-sm text-muted">Seed the database or create your first community report.</p>
+              <p className="mt-2 text-sm text-muted">Create your first community report to begin tracking its progress.</p>
             </div>
           )}
         </div>

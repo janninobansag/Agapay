@@ -26,13 +26,55 @@ Open `http://localhost:3000` in a browser.
 npm.cmd run lint
 npm.cmd run typecheck
 npm.cmd test
+npm.cmd run test:integration
+npm.cmd run test:e2e
+npm.cmd run test:a11y
+npm.cmd run test:performance
 npm.cmd run build
 ```
 
-All four commands should pass before a pull request is merged.
+All listed checks should pass before a pull request is merged.
+
+Stop `npm.cmd run dev` before running `npm.cmd run build`. Both commands write
+to `.next`; running a production build while the development server is active
+can invalidate its cache. If that happens, stop the server, delete `.next`, and
+start `npm.cmd run dev` again.
+
+## Development bundler
+
+`npm.cmd run dev` uses Webpack instead of Turbopack. This project encountered a
+Turbopack Hot Module Reloading (HMR) internal error during file updates. Webpack
+keeps Fast Refresh while avoiding that unstable development-server path. This
+only affects local development; production builds retain Next.js's normal build
+pipeline.
 
 The workflow in `.github/workflows/ci.yml` runs these checks automatically on
 every push and pull request using Node.js 24 and a clean `npm ci` installation.
+
+## Test layers
+
+`npm.cmd test` runs fast unit tests in `tests/unit` and never requires a
+database. `npm.cmd run test:integration` runs PostgreSQL lifecycle tests in
+`tests/integration`; it requires `TEST_DATABASE_URL` and refuses a connection
+whose database or schema name does not include `test`.
+
+Use an isolated test database, then apply migrations before integration tests:
+
+```powershell
+$env:TEST_DATABASE_URL = "postgresql://agapay:agapay@localhost:5432/agapay_test?schema=public"
+$env:DATABASE_URL = $env:TEST_DATABASE_URL
+npm.cmd run db:deploy
+npm.cmd run test:integration
+```
+
+`npm.cmd run test:e2e` builds into the ignored `.next-e2e` directory and runs
+the Playwright Chromium suite in `tests/e2e`. Install its browser once on a new
+machine with `npx playwright install chromium`. The current browser tests cover
+the public landing journey, protected-route redirect, and sign-up validation
+without creating accounts or modifying any database data.
+
+See `quality.md` for the automated accessibility audit and production browser
+performance budgets.
 
 ## Current implementation status
 
@@ -41,6 +83,8 @@ The current application contains:
 - A responsive marketing page
 - Resident navigation and dashboard
 - Database-backed report list and detail pages
+- Server-side resident report search and status filtering
+- Route-aware resident, staff, and administrator navigation
 - Persistent resident drafts, submissions, editing, and cancellation
 - Staff verification, assignment, work-start, rejection, and resolution tools
 - Private, optimized Supabase evidence uploads with signed display URLs
@@ -50,7 +94,6 @@ The current application contains:
 - Resident notification inbox, unread count, and email templates
 - Persistent resident profile and notification-preference settings
 - Credentials sign-in, registration, sign-out, and role-specific workspaces
-- Placeholder map, notifications, and settings pages
 
 See `reporting-workflow.md` for lifecycle rules and one-time evidence Storage
 setup.
@@ -104,7 +147,7 @@ npm.cmd run db:studio
 
 ## Current database state
 
-The initial migration was applied to Supabase and the demonstration seed was
+The initial migration was applied to Supabase and the local development seed was
 verified on September 4, 2026. Expected verification counts are:
 
 | Record type | Count |
@@ -127,7 +170,7 @@ After running the current seed, use `AgapayDemo123!` with one of these emails:
 - Administrator: `admin@agapay.local`
 
 Override the shared development password by setting `SEED_DEMO_PASSWORD` before
-rerunning `npm.cmd run db:seed`. Do not use the demonstration password for real
+rerunning `npm.cmd run db:seed`. Do not use the seed password for real
 users or a public production administration account.
 
 ## Environment variables
@@ -152,3 +195,8 @@ Map development works without an API key. The default tile and Nominatim URLs
 are documented in `.env.example` and can be replaced per environment. Read
 `maps-and-notifications.md` before production use; the public OSM services have
 strict attribution, identification, caching, and traffic rules.
+
+Google and Facebook sign-in are optional. Their `AUTH_GOOGLE_*` and
+`AUTH_FACEBOOK_*` credentials are documented in `.env.example`; see
+`authentication.md` for developer-console callback URLs and the required
+database migration.

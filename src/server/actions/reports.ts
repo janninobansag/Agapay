@@ -166,5 +166,7 @@ export async function transitionReport(formData: FormData) {
   });
   revalidatePath("/staff");
   revalidatePath(`/staff/reports/${report.publicId}`);
+  revalidatePath("/admin/reports");
+  revalidatePath(`/admin/reports/${report.publicId}`);
   revalidatePath(`/reports/${report.publicId}`);
 }

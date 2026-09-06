@@ -7,8 +7,23 @@ const emailSchema = z
   .email("Enter a valid email address.")
   .max(320);
 
+const passwordSchema = z
+  .string()
+  .min(8, "Use at least 8 characters.")
+  .max(128)
+  .regex(/[a-z]/, "Add a lowercase letter.")
+  .regex(/[A-Z]/, "Add an uppercase letter.")
+  .regex(/[0-9]/, "Add a number.");
+
+const signInIdentifierSchema = z
+  .string()
+  .trim()
+  .min(3, "Enter your email address or username.")
+  .max(320)
+  .transform((value) => value.toLowerCase());
+
 export const signInSchema = z.object({
-  email: emailSchema,
+  identifier: signInIdentifierSchema,
   password: z.string().min(1, "Enter your password.").max(128),
 });
 
@@ -16,13 +31,7 @@ export const signUpSchema = z
   .object({
     name: z.string().trim().min(2, "Enter your full name.").max(100),
     email: emailSchema,
-    password: z
-      .string()
-      .min(12, "Use at least 12 characters.")
-      .max(128)
-      .regex(/[a-z]/, "Add a lowercase letter.")
-      .regex(/[A-Z]/, "Add an uppercase letter.")
-      .regex(/[0-9]/, "Add a number."),
+    password: passwordSchema,
     confirmPassword: z.string(),
   })
   .refine((values) => values.password === values.confirmPassword, {
@@ -30,3 +39,21 @@ export const signUpSchema = z
     path: ["confirmPassword"],
   });
 
+export const createStaffSchema = z.object({
+  name: z.string().trim().min(2, "Enter the staff member's full name.").max(100),
+  email: emailSchema,
+  password: passwordSchema,
+  confirmPassword: z.string(),
+}).refine((values) => values.password === values.confirmPassword, {
+  message: "Passwords do not match.",
+  path: ["confirmPassword"],
+});
+
+export const adminPasswordResetSchema = z.object({
+  userId: z.string().min(1),
+  password: passwordSchema,
+  confirmPassword: z.string(),
+}).refine((values) => values.password === values.confirmPassword, {
+  message: "Passwords do not match.",
+  path: ["confirmPassword"],
+});

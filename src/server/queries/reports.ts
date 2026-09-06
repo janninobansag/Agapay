@@ -67,13 +67,22 @@ function statusEventTitle(status: DatabaseReportStatus) {
   return titles[status];
 }
 
-export async function getResidentReports(): Promise<QueryResult<ReportSummary[]>> {
+export async function getResidentReports(filters: { query?: string; status?: DatabaseReportStatus } = {}): Promise<QueryResult<ReportSummary[]>> {
   if (!isDatabaseConfigured()) return { data: [], availability: "unconfigured" };
   const user = await requireRole(["RESIDENT"]);
 
   try {
     const reports = await getPrisma().report.findMany({
-      where: { reporterId: user.id },
+      where: {
+        reporterId: user.id,
+        status: filters.status,
+        ...(filters.query ? { OR: [
+          { publicId: { contains: filters.query, mode: "insensitive" } },
+          { title: { contains: filters.query, mode: "insensitive" } },
+          { address: { contains: filters.query, mode: "insensitive" } },
+          { category: { name: { contains: filters.query, mode: "insensitive" } } },
+        ] } : {}),
+      },
       include: { category: { select: { name: true } } },
       orderBy: { createdAt: "desc" },
     });

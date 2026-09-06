@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { LngLatBounds, Map, Marker, NavigationControl, Popup, setWorkerUrl } from "maplibre-gl";
-import { PHILIPPINES_CENTER, osmRasterStyle } from "@/lib/map/config";
+import { OSM_MAX_ZOOM, PHILIPPINES_CENTER, osmRasterStyle } from "@/lib/map/config";
 
 setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
@@ -20,7 +20,7 @@ export function CommunityMap({ reports }: { reports: MapReport[] }) {
 
   useEffect(() => {
     if (!container.current) return;
-    const map = new Map({ container: container.current, style: osmRasterStyle, center: PHILIPPINES_CENTER, zoom: 14 });
+    const map = new Map({ container: container.current, style: osmRasterStyle, center: PHILIPPINES_CENTER, zoom: 14, maxZoom: OSM_MAX_ZOOM });
     map.addControl(new NavigationControl(), "top-right");
     const bounds = new LngLatBounds();
 

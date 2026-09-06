@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, ClipboardCheck, MapPin, MessageSquareText, ShieldCheck } from "lucide-react";
+import { ArrowRight, CheckCircle2, ClipboardCheck, Mail, MapPin, MessageSquareText, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { SiteHeader } from "@/components/layout/site-header";
 
@@ -13,8 +13,7 @@ export default function HomePage() {
     <div className="min-h-screen overflow-hidden">
       <SiteHeader />
       <main>
-        <section className="landing-grid relative border-b border-border">
-          <div className="absolute -right-28 top-12 size-96 rounded-full bg-brand-soft/70 blur-3xl" />
+        <section className="landing-hero relative border-b border-border">
           <div className="relative mx-auto grid max-w-7xl gap-14 px-5 py-20 lg:grid-cols-[1.08fr_0.92fr] lg:px-8 lg:py-28">
             <div className="max-w-3xl">
               <span className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-surface px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-brand">
@@ -31,7 +30,7 @@ export default function HomePage() {
                   Report an issue <ArrowRight aria-hidden="true" size={18} />
                 </Link>
                 <Link className="inline-flex items-center justify-center rounded-full border border-border bg-surface px-6 py-3.5 font-bold text-brand-dark transition hover:border-brand/30 hover:bg-brand-soft" href="/dashboard">
-                  Explore the demo
+                  Get started
                 </Link>
               </div>
               <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm font-medium text-muted">
@@ -108,13 +107,35 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <footer className="border-t border-border bg-surface">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between lg:px-8">
-          <p className="font-semibold text-brand-dark">Agapay — communities that respond.</p>
-          <p>Portfolio demonstration · 2026</p>
+      <footer className="border-t border-white/10 bg-brand-dark text-white">
+        <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+          <div className="grid gap-10 md:grid-cols-[1.25fr_0.75fr_1fr]">
+            <div>
+              <p className="text-xl font-bold tracking-tight">Agapay</p>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-white/65">A community platform for clearer, more accountable issue reporting and response.</p>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Explore</p>
+              <nav aria-label="Footer navigation" className="mt-4 flex flex-col items-start gap-3 text-sm font-medium text-white/75">
+                <Link className="transition hover:text-white" href="#how-it-works">How it works</Link>
+                <Link className="transition hover:text-white" href="#features">Features</Link>
+                <Link className="transition hover:text-white" href="/dashboard">Get started</Link>
+              </nav>
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Get in touch</p>
+              <p className="mt-4 text-sm leading-6 text-white/65">Have feedback or want to discuss this project?</p>
+              <a className="mt-4 inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2.5 text-sm font-bold text-white transition hover:border-emerald-300 hover:bg-white/10" href="mailto:janninobansag@gmail.com">
+                <Mail aria-hidden="true" size={16} /> janninobansag@gmail.com
+              </a>
+            </div>
+          </div>
+          <div className="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
+            <p>© 2026 Agapay. Community-service pilot.</p>
+            <p>Communities that respond.</p>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
-

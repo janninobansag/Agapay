@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createReportSchema, draftReportSchema } from "@/features/reports/schemas";
+import { createReportSchema, draftReportSchema, reportFiltersSchema } from "@/features/reports/schemas";
 
 const validReport = {
   categoryId: "streetlight-category",
@@ -53,5 +53,21 @@ describe("createReportSchema", () => {
 
   it("rejects submitted coordinates outside the Philippines", () => {
     expect(createReportSchema.safeParse({ ...validReport, latitude: 40.7128, longitude: -74.006 }).success).toBe(false);
+  });
+});
+
+describe("reportFiltersSchema", () => {
+  it("normalizes a report search and accepts a supported status", () => {
+    expect(reportFiltersSchema.parse({ q: "  streetlight  ", status: "IN_PROGRESS" })).toEqual({
+      q: "streetlight",
+      status: "IN_PROGRESS",
+    });
+  });
+
+  it("ignores an unsupported status from the URL", () => {
+    expect(reportFiltersSchema.parse({ q: "", status: "UNKNOWN" })).toEqual({
+      q: "",
+      status: undefined,
+    });
   });
 });

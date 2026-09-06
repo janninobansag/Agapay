@@ -12,7 +12,7 @@
 
 - [x] Design the PostgreSQL schema
 - [x] Configure Prisma and database migrations
-- [x] Seed realistic demonstration data
+- [x] Seed local development data
 - [x] Replace sample report data with server queries
 - [x] Add input validation with Zod
 - [x] Apply the migration and seed to a reachable PostgreSQL database
@@ -39,10 +39,11 @@
 - [x] Add in-app notification delivery
 - [x] Add email notification templates
 
-## Milestone 6: Portfolio release
+## Milestone 6: Pilot release
 
-- [ ] Unit, integration, and end-to-end coverage
-- [ ] Accessibility and performance audit
-- [ ] Container and production deployment configuration
-- [ ] Seeded demo accounts and guided product tour
-- [ ] Architecture diagram, screenshots, and case study
+- [x] Remove nonfunctional prototype controls and hard-coded dashboard content
+- [x] Unit, integration, and end-to-end coverage
+- [x] Accessibility and performance audit
+- [x] Container and production deployment configuration
+- [x] Development seed accounts and guided onboarding
+- [ ] Architecture diagram, screenshots, and launch case study

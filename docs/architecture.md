@@ -120,6 +120,14 @@ mutations stay in `src/server`, while provider-neutral email rendering lives in
 Tests may also be colocated beside a feature when tight proximity makes the
 module easier to maintain.
 
+## Production runtime
+
+The Docker image uses Next.js standalone output and runs as a non-root user.
+Prisma migrations run in a separate one-off container before the web service is
+started or scaled. `/api/health` performs a read-only PostgreSQL readiness check
+for deployment platforms. See [deployment.md](deployment.md) for environment,
+image, and release procedures.
+
 ## Naming conventions
 
 - React components: `PascalCase.tsx`

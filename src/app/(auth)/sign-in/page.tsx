@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { SignInForm } from "@/features/auth/components/sign-in-form";
+import { SocialAuthButtons } from "@/features/auth/components/social-auth-buttons";
+import { socialSignInProviders } from "@/auth";
 
 export const metadata = { title: "Sign in" };
 
@@ -12,11 +14,7 @@ export default function SignInPage() {
         <h1 className="mt-10 text-3xl font-bold tracking-tight text-brand-dark">Welcome back</h1>
         <p className="mt-2 text-sm text-muted">Sign in to track your reports and community updates.</p>
         <SignInForm />
-        <div className="mt-6 rounded-2xl bg-brand-soft/60 p-4 text-xs leading-5 text-brand-dark">
-          <p className="font-bold">Resident demo</p>
-          <p>Email: resident@agapay.local</p>
-          <p>Password: AgapayDemo123!</p>
-        </div>
+        <SocialAuthButtons providers={socialSignInProviders} />
         <p className="mt-6 text-center text-sm text-muted">New to Agapay? <Link className="font-bold text-brand" href="/sign-up">Create an account</Link></p>
       </div>
     </main>

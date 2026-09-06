@@ -3,7 +3,7 @@
 import { hash } from "bcryptjs";
 import { AuthError } from "next-auth";
 import { Prisma } from "@prisma/client";
-import { signIn, signOut } from "@/auth";
+import { signIn, signInRemembered, signOut } from "@/auth";
 import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 import { getPrisma } from "@/lib/db/prisma";
 
@@ -17,7 +17,7 @@ export async function authenticate(
   formData: FormData,
 ): Promise<AuthFormState> {
   const parsed = signInSchema.safeParse({
-    email: formData.get("email"),
+    identifier: formData.get("identifier"),
     password: formData.get("password"),
   });
 
@@ -26,8 +26,9 @@ export async function authenticate(
   }
 
   try {
-    await signIn("credentials", {
-      email: parsed.data.email,
+    const login = formData.get("rememberMe") === "on" ? signInRemembered : signIn;
+    await login("credentials", {
+      identifier: parsed.data.identifier,
       password: parsed.data.password,
       redirectTo: "/post-login",
     });
@@ -90,7 +91,7 @@ export async function registerResident(
 
   try {
     await signIn("credentials", {
-      email: parsed.data.email,
+      identifier: parsed.data.email,
       password: parsed.data.password,
       redirectTo: "/dashboard",
     });

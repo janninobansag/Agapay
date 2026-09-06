@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BrandMark } from "@/components/ui/brand-mark";
 import { SignOutButton } from "@/features/auth/components/sign-out-button";
 import type { CurrentUser } from "@/lib/auth/user";
+import { RoleNavigation } from "@/components/layout/role-navigation";
 
 type RoleShellProps = {
   children: React.ReactNode;
@@ -21,9 +22,7 @@ export function RoleShell({ children, user, areaLabel, links }: RoleShellProps) 
             <span className="hidden h-6 w-px bg-border sm:block" />
             <span className="hidden items-center gap-2 text-sm font-bold text-muted sm:flex"><ShieldCheck size={17} /> {areaLabel}</span>
           </div>
-          <nav aria-label={`${areaLabel} navigation`} className="flex items-center gap-1">
-            {links.map((link) => <Link className="rounded-full px-3 py-2 text-sm font-bold text-muted hover:bg-surface-muted hover:text-brand-dark" href={link.href} key={link.href}>{link.label}</Link>)}
-          </nav>
+          <RoleNavigation areaLabel={areaLabel} links={links} />
           <div className="flex items-center gap-3">
             <div className="hidden text-right sm:block"><p className="text-sm font-bold text-brand-dark">{user.name}</p><p className="text-xs text-muted">{user.role.toLowerCase()}</p></div>
             <div className="w-24"><SignOutButton /></div>
@@ -34,4 +33,3 @@ export function RoleShell({ children, user, areaLabel, links }: RoleShellProps) 
     </div>
   );
 }
-

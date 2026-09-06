@@ -82,4 +82,5 @@ Then open `http://localhost:3000`.
 - [Maps, geocoding, notifications, and email](docs/maps-and-notifications.md)
 - [Data-layer decision record](docs/decisions/001-postgresql-and-prisma.md)
 - [Local development guide](docs/development.md)
+- [Container and production deployment](docs/deployment.md)
 - [Delivery roadmap](docs/roadmap.md)

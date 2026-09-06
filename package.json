@@ -5,13 +5,17 @@
   "type": "module",
   "scripts": {
     "predev": "node scripts/copy-maplibre-worker.mjs",
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "prebuild": "node scripts/copy-maplibre-worker.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run tests/unit",
+    "test:integration": "node tests/integration/preflight.mjs && vitest run tests/integration",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "test:a11y": "node tests/e2e/run.mjs --grep @a11y",
+    "test:performance": "node tests/e2e/run.mjs --grep @performance",
     "prisma:generate": "prisma generate",
     "db:validate": "prisma validate",
     "db:migrate": "prisma migrate dev",
@@ -40,6 +44,8 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^26.4.1",
     "@types/pg": "^8.23.1",

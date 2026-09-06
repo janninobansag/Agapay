@@ -4,11 +4,16 @@ import { signInSchema, signUpSchema } from "@/features/auth/schemas";
 describe("authentication schemas", () => {
   it("normalizes email addresses during sign in", () => {
     const result = signInSchema.parse({
-      email: "  Resident@Agapay.Local ",
+      identifier: "  Resident@Agapay.Local ",
       password: "AgapayDemo123!",
     });
 
-    expect(result.email).toBe("resident@agapay.local");
+    expect(result.identifier).toBe("resident@agapay.local");
+  });
+
+  it("accepts a username during sign in", () => {
+    const result = signInSchema.parse({ identifier: " Admin ", password: "Jan232004" });
+    expect(result.identifier).toBe("admin");
   });
 
   it("requires a strong registration password", () => {
@@ -17,6 +22,28 @@ describe("authentication schemas", () => {
       email: "resident@example.com",
       password: "weak-password",
       confirmPassword: "weak-password",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts a strong eight-character registration password", () => {
+    const result = signUpSchema.safeParse({
+      name: "New Resident",
+      email: "resident@example.com",
+      password: "Strong8A",
+      confirmPassword: "Strong8A",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a strong password shorter than eight characters", () => {
+    const result = signUpSchema.safeParse({
+      name: "New Resident",
+      email: "resident@example.com",
+      password: "Short1A",
+      confirmPassword: "Short1A",
     });
 
     expect(result.success).toBe(false);
@@ -33,4 +60,3 @@ describe("authentication schemas", () => {
     expect(result.success).toBe(false);
   });
 });
-
